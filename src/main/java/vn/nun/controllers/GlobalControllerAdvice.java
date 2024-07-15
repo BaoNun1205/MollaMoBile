@@ -33,6 +33,14 @@ public class GlobalControllerAdvice {
             Cart cart = cartService.getCartForCurrentUser();
             if (cart != null) {
                 List<CartItem> listCartItem = cart.getCartItems();
+
+                double total = 0;
+                for (CartItem item : listCartItem) {
+                    total += item.getCount() * item.getProduct().getPrice();
+                }
+
+                model.addAttribute("cart", cart);
+                model.addAttribute("total", total);
                 model.addAttribute("listCartItem", listCartItem);
             }
         }

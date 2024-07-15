@@ -1,9 +1,6 @@
 package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +24,6 @@ public class ProductUserController {
         List<Category> listCate = this.categoryService.getAll();
         model.addAttribute("listCate", listCate);
 		model.addAttribute("product", product);
-//        Cart cart = cartService.getCartForCurrentUser();
-//
-//        if (cart != null){
-//            List<CartItem> listCartItem = cart.getCartItems();
-//            model.addAttribute("listCartItem", listCartItem);
-//        }
 		return ("user/product");
     }
 
@@ -43,7 +34,7 @@ public class ProductUserController {
     private CartItemService cartItemService;
 
     @PostMapping("/add-cart")
-    public String AddCart(Model model, @RequestParam("productId") Integer productId, @RequestParam("count") Integer count,  @ModelAttribute("isAuthenticated") boolean isAuthenticated){
+    public String AddCartItem(Model model, @RequestParam("productId") Integer productId, @RequestParam("count") Integer count,  @ModelAttribute("isAuthenticated") boolean isAuthenticated){
         if (!isAuthenticated) {
             return "redirect:/login";
         }
@@ -65,5 +56,29 @@ public class ProductUserController {
 
         // Redirect to product details page after adding to cart
         return "redirect:/product/" + productId;
+    }
+
+    @GetMapping ("/add-cart/{id}")
+    public String AddOneCartItem(Model model, @PathVariable("id") Integer productId, @ModelAttribute("isAuthenticated") boolean isAuthenticated){
+        if (!isAuthenticated) {
+            return "redirect:/login";
+        }
+
+        Cart cart = cartService.getCartForCurrentUser();
+
+        Product product = productService.findById(productId);
+        if (cartItemService.existProduct(cart, product)){
+            CartItem cartItem = cartItemService.findByProduct(cart, product);
+            cartItem.setCount(cartItem.getCount() + 1);
+            cartItemService.update(cartItem);
+        } else {
+            CartItem cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setCount(1);
+            cartItemService.create(cartItem);
+        }
+
+        return "redirect:/";
     }
 }

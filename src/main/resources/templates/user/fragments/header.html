@@ -34,8 +34,14 @@
                                     </div><!-- End .header-menu -->
                                 </div>
                             </li>
-                            <li><a href="#signin-modal" data-toggle="modal" sec:authentication="name"></a></li>
-                            <!--                                    <input type="hidden" name="cartId" th:value="${cart.id}"/>-->
+<!--                            <li><a href="#signin-modal" data-toggle="modal" sec:authentication="name"></a></li>-->
+
+                            <li th:if="${isAuthenticated}">
+                                <a th:href="@{/account}" sec:authentication="name"></a>
+                            </li>
+                            <li th:if="${!isAuthenticated}">
+                                <a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a>
+                            </li>
                         </ul>
                     </li>
                 </ul><!-- End .top-menu -->
@@ -112,7 +118,7 @@
                     <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                         <div class="icon">
                             <i class="icon-shopping-cart"></i>
-                            <span class="cart-count">2</span>
+                            <span class="cart-count" th:text="${cart.cartItems.size()}">0</span>
                         </div>
                         <p>Cart</p>
                     </a>
@@ -146,7 +152,7 @@
                         <div class="dropdown-cart-total">
                             <span>Total</span>
 
-                            <span class="cart-total-price">$160.00</span>
+                            <span class="cart-total-price" th:text="'$' + ${total}">$0.00</span>
                         </div><!-- End .dropdown-cart-total -->
 
                         <div class="dropdown-cart-action">
