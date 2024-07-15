@@ -28,7 +28,7 @@ public class Category {
 	private String categoryName;
 	
 	@Column(name = "categoryStatus")
-	private boolean categoryStatus;
+	private Boolean categoryStatus;
 	
 	@OneToMany(mappedBy = "category")
 	private Set<Product> products;

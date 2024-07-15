@@ -2,16 +2,15 @@ package vn.nun.models;
 
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 	@Id
@@ -46,103 +45,6 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<UserRole> userRoles;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassWord() {
-		return passWord;
-	}
-
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public Boolean getGender() {
-		return gender;
-	}
-
-	public void setGender(Boolean gender) {
-		this.gender = gender;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public Set<UserRole> getUserRoles() {
-		return userRoles;
-	}
-
-	public void setUserRoles(Set<UserRole> userRoles) {
-		this.userRoles = userRoles;
-	}
-
-	public User() {
-		super();
-	}
-
-	public User(Long id, String userName, String passWord, Boolean enabled, String fullName, Boolean gender,
-			String address, String email, String telephone, Set<UserRole> userRoles) {
-		super();
-		this.id = id;
-		this.userName = userName;
-		this.passWord = passWord;
-		this.enabled = enabled;
-		this.fullName = fullName;
-		this.gender = gender;
-		this.address = address;
-		this.email = email;
-		this.telephone = telephone;
-		this.userRoles = userRoles;
-	}
-
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Cart cart;
 }

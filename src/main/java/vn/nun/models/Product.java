@@ -1,16 +1,11 @@
 package vn.nun.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -35,13 +30,16 @@ public class Product {
 	@Column(name = "sold")
 	private Integer sold;
 	
-	@Column(name = "image")
-	private String image;
-	
-	@Column(name = "description")
+	@Column(name = "description", length = 10000)
 	private String description;
 	
 	@ManyToOne
 	@JoinColumn(name = "categoryId", referencedColumnName = "id")
 	private Category category;
+
+	@OneToMany(mappedBy = "product")
+	private List<Image> images;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<CartItem> cartItem;
 }

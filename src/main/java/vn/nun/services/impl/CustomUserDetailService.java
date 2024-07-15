@@ -1,4 +1,4 @@
-package vn.nun.services;
+package vn.nun.services.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import vn.nun.models.CustomUserDetail;
 import vn.nun.models.User;
 import vn.nun.models.UserRole;
+import vn.nun.services.UserService;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService{

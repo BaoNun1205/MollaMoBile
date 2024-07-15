@@ -1,4 +1,4 @@
-package vn.nun.services;
+package vn.nun.services.impl;
 
 import java.util.List;
 
@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import vn.nun.models.Category;
 import vn.nun.models.Product;
 import vn.nun.repository.ProductRepository;
+import vn.nun.services.ProductService;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;

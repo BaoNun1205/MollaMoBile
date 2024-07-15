@@ -30,12 +30,12 @@
     </section>
 
 	<!-- Main content -->
-	<section class="content">		
+	<section class="content">
 		<div class="box">
 			<div class="box-header with-border">
 				<h3 class="box-title">Bordered Table</h3>
 			</div>
-	
+
 			<div class="box-body">
 				<table class="table table-bordered">
 					<tbody>
@@ -49,16 +49,16 @@
 							<th>Description</th>
 							<th>Action</th>
 						</tr>
-						
+
 						<tr th:each="product : ${list}">
 							<td th:text=${product.id}></td>
 							<td th:text=${product.productName}></td>
 							<td th:text=${product.price}></td>
 							<td th:text=${product.quantity}></td>
 							<td th:text=${product.sold}></td>
-							<td>
-								<img th:src="@{/uploads/{image}(image=${product.image})}" style="width: 150px;" alt="Product Image">
-							</td>
+                            <td>
+                                <img th:if="${product.images.size() > 0}" th:src="@{/uploads/{image}(image=${product.images.get(0).image})}" style="width: 150px;" alt="Product Image">
+                            </td>
 							<td th:text=${product.description}></td>
 							<td>
 								<a class="btn btn-success" th:href="@{/admin/edit-product/{id}(id=${product.id})}">Edit</a>
@@ -68,7 +68,7 @@
 					</tbody>
 				</table>
 			</div>
-	
+
 			<div class="box-footer clearfix">
 				<ul class="pagination pagination-sm no-margin pull-right">
 					<li><a href="#">«</a></li>

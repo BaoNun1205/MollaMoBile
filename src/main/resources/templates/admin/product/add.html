@@ -68,11 +68,13 @@
 										<input type="text" class="form-control" id="exampleInputEmail1"
 											th:field=*{description} placeholder="Description">
 									</div>
+									<!-- Other form fields -->
 									<div class="form-group">
 										<label for="exampleInputFile">Image input</label>
-										<input type="file" id="exampleInputFile" name="fileImage">
-										<p class="help-block">Add image of product</p>
+										<input type="file" id="exampleInputFile" name="fileImages" multiple>
+										<p class="help-block">Add images of product</p>
 									</div>
+									<!-- Other form fields -->
 									<div class="form-group">
 										<label>Category</label>
 										<select class="form-control" th:field=*{category.id}>
@@ -102,5 +104,40 @@
 
 	<div th:replace="admin/fragments/scripts :: scripts"></div>
 </body>
+<!--<script>-->
+<!--	document.getElementById('productForm').addEventListener('submit', function(event) {-->
+<!--		event.preventDefault();-->
+<!--		const form = event.target;-->
+<!--		const formData = new FormData();-->
 
+<!--		// Append other form fields to FormData-->
+<!--		for (let element of form.elements) {-->
+<!--			if (element.name && element.type !== 'file') {-->
+<!--				formData.append(element.name, element.value);-->
+<!--			}-->
+<!--		}-->
+
+<!--		// Collect files from each input and append to FormData-->
+<!--		const fileInputs = ['imageInput1', 'imageInput2', 'imageInput3', 'imageInput4'];-->
+<!--		for (let inputId of fileInputs) {-->
+<!--			const input = document.getElementById(inputId);-->
+<!--			if (input.files.length > 0) {-->
+<!--				formData.append('fileImages', input.files[0]);-->
+<!--			}-->
+<!--		}-->
+
+<!--		fetch(form.action, {-->
+<!--			method: 'POST',-->
+<!--			body: formData-->
+<!--		}).then(response => {-->
+<!--			if (response.ok) {-->
+<!--				window.location.href = '/admin/product';-->
+<!--			} else {-->
+<!--				alert('Failed to submit the form.');-->
+<!--			}-->
+<!--		}).catch(error => {-->
+<!--			console.error('Error:', error);-->
+<!--		});-->
+<!--	});-->
+<!--</script>-->
 </html>

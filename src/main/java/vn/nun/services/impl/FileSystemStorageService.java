@@ -1,4 +1,4 @@
-package vn.nun.services;
+package vn.nun.services.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +9,10 @@ import java.nio.file.StandardCopyOption;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.nun.services.StorageService;
 
 @Service
-public class FileSystemStorageService implements StorageService{
+public class FileSystemStorageService implements StorageService {
 	
 	private final Path rootLocation;
 

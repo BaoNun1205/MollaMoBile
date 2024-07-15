@@ -2,9 +2,11 @@ package vn.nun.models;
 
 import java.util.Collection;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Data
 public class CustomUserDetail implements UserDetails{
 	private User user;
 	

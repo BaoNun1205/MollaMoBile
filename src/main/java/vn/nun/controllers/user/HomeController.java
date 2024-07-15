@@ -1,4 +1,4 @@
-package vn.nun.controllers;
+package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,8 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import vn.nun.models.Cart;
+import vn.nun.models.CartItem;
 import vn.nun.models.Category;
 import vn.nun.models.Product;
+import vn.nun.services.CartService;
 import vn.nun.services.CategoryService;
 import vn.nun.services.ProductService;
 
@@ -22,12 +25,16 @@ public class HomeController {
 	@Autowired
 	private CategoryService categoryService;
 
+	@Autowired
+	private CartService cartService;
+
 	@GetMapping
 	public String home(Model model) {
 		List<Product> list = this.productService.getAll();
 		List<Category> listCate = this.categoryService.getAll();
 		model.addAttribute("list", list);
 		model.addAttribute("listCate", listCate);
+
 		return ("user/index");
 	}
 
@@ -40,10 +47,5 @@ public class HomeController {
 		model.addAttribute("listCate", listCate);
 		model.addAttribute("list", listProduct);
 		return ("user/index");
-	}
-
-	@GetMapping("/product")
-    public String DetailProduct(){
-		return ("user/product");
 	}
 }

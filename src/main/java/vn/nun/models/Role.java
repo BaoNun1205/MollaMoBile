@@ -18,6 +18,7 @@ public class Role {
 	private String name;
 	
 	@OneToMany(mappedBy = "role")
+
 	private Set<UserRole> roleUsers;
 
 	public Role() {
@@ -54,6 +55,6 @@ public class Role {
 	public void setRoleUsers(Set<UserRole> roleUsers) {
 		this.roleUsers = roleUsers;
 	}
-	
-	
+
+
 }

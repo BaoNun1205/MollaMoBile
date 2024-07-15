@@ -1,4 +1,4 @@
-package vn.nun.services;
+package vn.nun.services.impl;
 
 import java.util.List;
 
@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 
 import vn.nun.models.Category;
 import vn.nun.repository.CategoryRepository;
+import vn.nun.services.CategoryService;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
