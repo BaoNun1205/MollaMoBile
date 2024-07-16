@@ -30,22 +30,31 @@ public class HomeController {
 
 	@GetMapping
 	public String home(Model model) {
-		List<Product> list = this.productService.getAll();
+		List<Product> all = this.productService.getAll();
+//		List<Product> iphones = this.productService.getAll();
+//		List<Product> samsungs = this.productService.getAll();
+//		List<Product> vivos = this.productService.getAll();
+//		List<Product> oppos = this.productService.getAll();
+//		List<Product> xiaomis = this.productService.getAll();
+
 		List<Category> listCate = this.categoryService.getAll();
-		model.addAttribute("list", list);
 		model.addAttribute("listCate", listCate);
 
+		model.addAttribute("all", all);
+		model.addAttribute("iphones", all);
+		model.addAttribute("samsungs", all);
+		model.addAttribute("vivos", all);
+		model.addAttribute("oppos", all);
+		model.addAttribute("xiaomis", all);
 		return ("user/index");
 	}
 
-	@GetMapping("/new-arrivals/{id}")
-	public String NewArrivalsCategory(Model model, @PathVariable("id") Integer id){
-		Category category = this.categoryService.findById(id);
-
-		List<Product> listProduct = this.productService.findByCategory(category);
-		List<Category> listCate = this.categoryService.getAll();
-		model.addAttribute("listCate", listCate);
-		model.addAttribute("list", listProduct);
-		return ("user/index");
-	}
+//	@GetMapping("/new-arrivals/{id}")
+//	public String NewArrivalsCategory(Model model, @PathVariable("id") Integer id){
+//		Category category = this.categoryService.findById(id);
+//
+//		List<Product> listProduct = this.productService.findByCategory(category);
+//		model.addAttribute("list", listProduct);
+//		return ("user/index");
+//	}
 }

@@ -24,10 +24,8 @@ public class CategoryUserController {
     @GetMapping("/{id}")
     public String DetailCategory(Model model, @PathVariable("id") Integer id){
         Category category = categoryService.findById(id);
-        List<Category> listCate = this.categoryService.getAll();
         List<Product> listProduct = this.productService.findByCategory(category);
 
-        model.addAttribute("listCate", listCate);
         model.addAttribute("category", category);
         model.addAttribute("listProduct", listProduct);
         return ("user/category");

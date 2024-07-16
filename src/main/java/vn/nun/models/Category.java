@@ -1,14 +1,9 @@
 package vn.nun.models;
 
+import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +25,7 @@ public class Category {
 	@Column(name = "categoryStatus")
 	private Boolean categoryStatus;
 	
-	@OneToMany(mappedBy = "category")
-	private Set<Product> products;
+	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+	private List<Product> products;
 
 }

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import vn.nun.models.Cart;
 import vn.nun.models.CartItem;
+import vn.nun.models.Category;
 import vn.nun.services.CartService;
+import vn.nun.services.CategoryService;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,14 +19,20 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalControllerAdvice {
     private final CartService cartService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public GlobalControllerAdvice(CartService cartService) {
+    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService) {
         this.cartService = cartService;
+        this.categoryService = categoryService;
     }
 
     @ModelAttribute
     public void addAttributes(Model model) {
+
+        List<Category> listCate = this.categoryService.getAll();
+        model.addAttribute("listCate", listCate);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
         model.addAttribute("isAuthenticated", isAuthenticated);

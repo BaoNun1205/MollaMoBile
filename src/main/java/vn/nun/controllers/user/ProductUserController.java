@@ -21,8 +21,6 @@ public class ProductUserController {
     @GetMapping("/{id}")
     public String DetailProduct(Model model, @PathVariable("id") Integer id){
         Product product = productService.findById(id);
-        List<Category> listCate = this.categoryService.getAll();
-        model.addAttribute("listCate", listCate);
 		model.addAttribute("product", product);
 		return ("user/product");
     }
