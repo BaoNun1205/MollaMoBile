@@ -1,5 +1,7 @@
 package vn.nun.services.impl;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.nun.models.Cart;
@@ -9,6 +11,7 @@ import vn.nun.repository.CartItemRepository;
 import vn.nun.services.CartItemService;
 
 @Service
+@Slf4j
 public class CartItemServiceImpl implements CartItemService {
     @Autowired
     private CartItemRepository cartItemRepository;
@@ -29,6 +32,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    @Transactional
     public boolean update(CartItem cartItem) {
         try {
             cartItemRepository.save(cartItem);

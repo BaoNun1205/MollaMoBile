@@ -31,120 +31,112 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-9">
-              <table class="table table-cart table-mobile">
-                <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th></th>
-                </tr>
-                </thead>
+              <form th:action="@{/view-cart/update-cart}" method="post">
+                <table class="table table-cart table-mobile">
+                  <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="cartItem, iter : ${listCartItem}">
+                    <td class="product-col">
+                      <div class="product">
+                        <figure class="product-media">
+                          <a href="#">
+                            <img th:if="${cartItem.product.images.size() > 0}"
+                                 th:src="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
+                                 th:data-zoom-image="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
+                                 alt="product">
+                          </a>
+                        </figure>
+                        <h3 class="product-title">
+                          <a href="#" th:text="${cartItem.product.productName}"></a>
+                        </h3><!-- End .product-title -->
+                      </div><!-- End .product -->
+                    </td>
+                    <td class="price-col" th:data-price="${cartItem.product.price}" th:text="'$' + ${cartItem.product.price}"></td>
+                    <td class="quantity-col">
+                      <div class="cart-product-quantity">
+                        <input type="number" class="form-control quantity-input"
+                               th:name="quantity" th:value="${cartItem.count}" min="1" max="100" step="1" data-decimals="0" required>
+                        <!-- Sử dụng input hidden để truyền dữ liệu -->
+                        <input type="hidden" th:name="itemId" th:value="${cartItem.id}">
+                      </div><!-- End .cart-product-quantity -->
+                    </td>
+                    <td class="total-col" th:text="'$' + (${cartItem.count} * ${cartItem.product.price})"></td>
+                    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+                  </tr>
+                  </tbody>
+                </table><!-- End .table table-cart -->
 
-                <tbody>
-                <tr th:each="cartItem : ${listCartItem}">
-                  <td class="product-col">
-                    <div class="product">
-                      <figure class="product-media">
-                        <a href="#">
-                          <img th:if="${cartItem.product.images.size() > 0}"
-                               th:src="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
-                               th:data-zoom-image="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}" alt="product">
-                        </a>
-                      </figure>
+                <div class="cart-bottom">
+                  <div class="cart-discount">
+                    <form action="#">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="coupon code">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
+                        </div><!-- .End .input-group-append -->
+                      </div><!-- End .input-group -->
+                    </form>
+                  </div><!-- End .cart-discount -->
 
-                      <h3 class="product-title">
-                        <a href="#" th:text="${cartItem.product.productName}"></a>
-                      </h3><!-- End .product-title -->
-                    </div><!-- End .product -->
-                  </td>
-                  <td class="price-col" th:data-price="${cartItem.product.price}" th:text="'$' + ${cartItem.product.price}"></td>
-                  <td class="quantity-col">
-                    <div class="cart-product-quantity">
-                      <input type="number" class="form-control quantity-input" th:value="${cartItem.count}" min="1" max="10" step="1" data-decimals="0" required>
-                    </div><!-- End .cart-product-quantity -->
-                  </td>
-                  <td class="total-col" th:text="'$' + (${cartItem.count} * ${cartItem.product.price})"></td>
-                  <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-                </tr>
-                </tbody>
-              </table><!-- End .table table-wishlist -->
-
-              <div class="cart-bottom">
-                <div class="cart-discount">
-                  <form action="#">
-                    <div class="input-group">
-                      <input type="text" class="form-control" required placeholder="coupon code">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-                      </div><!-- .End .input-group-append -->
-                    </div><!-- End .input-group -->
-                  </form>
-                </div><!-- End .cart-discount -->
-
-                <a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
-              </div><!-- End .cart-bottom -->
+                  <button type="submit" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></button>
+                </div><!-- End .cart-bottom -->
+              </form>
             </div><!-- End .col-lg-9 -->
             <aside class="col-lg-3">
-              <div class="summary summary-cart">
-                <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+              <form th:action="@{/checkout}" method="post">
+                <div class="summary summary-cart">
+                  <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
 
-                <table class="table table-summary">
-                  <tbody>
-                  <tr class="summary-subtotal">
-                    <td>Subtotal:</td>
-                    <td>$160.00</td>
-                  </tr><!-- End .summary-subtotal -->
-                  <tr class="summary-shipping">
-                    <td>Shipping:</td>
-                    <td>&nbsp;</td>
-                  </tr>
+                  <table class="table table-summary">
+                    <tbody>
+                    <tr class="summary-subtotal">
+                      <td>Subtotal:</td>
+                      <td id="cart-total"></td>
+                    </tr><!-- End .summary-subtotal -->
+                    <tr class="summary-shipping">
+                      <td>Shipping:</td>
+                      <td>&nbsp;</td>
+                    </tr>
 
-                  <tr class="summary-shipping-row">
-                    <td>
-                      <div class="custom-control custom-radio">
-                        <input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-                        <label class="custom-control-label" for="free-shipping">Free Shipping</label>
-                      </div><!-- End .custom-control -->
-                    </td>
-                    <td>$0.00</td>
-                  </tr><!-- End .summary-shipping-row -->
+                    <!-- Duyệt qua các phương thức vận chuyển -->
+                    <tr class="summary-shipping-row" th:each="delivery : ${deliveries}">
+                      <td>
+                        <div class="custom-control custom-radio">
+                          <!-- Đặt id và name cho input radio -->
+                          <input type="radio" th:id="${'shipping-' + delivery.id}" th:name="shippingMethodId" class="custom-control-input shipping-option"
+                                 th:value="${delivery.id}" th:data-price="${delivery.price}" required>
+                          <!-- Đặt th:for và th:text cho label -->
+                          <label class="custom-control-label" th:for="${'shipping-' + delivery.id}" th:text="${delivery.name}"></label>
+                        </div><!-- End .custom-control -->
+                      </td>
+                      <td th:text="'$' + ${delivery.price}"></td>
+                    </tr><!-- End .summary-shipping-row -->
 
-                  <tr class="summary-shipping-row">
-                    <td>
-                      <div class="custom-control custom-radio">
-                        <input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-                        <label class="custom-control-label" for="standart-shipping">Standart:</label>
-                      </div><!-- End .custom-control -->
-                    </td>
-                    <td>$10.00</td>
-                  </tr><!-- End .summary-shipping-row -->
+                    <tr class="summary-shipping-estimate">
+                      <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
+                      <td>&nbsp;</td>
+                    </tr><!-- End .summary-shipping-estimate -->
 
-                  <tr class="summary-shipping-row">
-                    <td>
-                      <div class="custom-control custom-radio">
-                        <input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-                        <label class="custom-control-label" for="express-shipping">Express:</label>
-                      </div><!-- End .custom-control -->
-                    </td>
-                    <td>$20.00</td>
-                  </tr><!-- End .summary-shipping-row -->
+                    <tr class="summary-total">
+                      <td>Total:</td>
+                      <td id="cart-total-final"></td>
+                    </tr><!-- End .summary-total -->
+                    </tbody>
+                  </table><!-- End .table table-summary -->
 
-                  <tr class="summary-shipping-estimate">
-                    <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
-                    <td>&nbsp;</td>
-                  </tr><!-- End .summary-shipping-estimate -->
+                  <!-- Nút submit để chuyển đến trang thanh toán -->
+                  <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
+                </div><!-- End .summary -->
+              </form>
 
-                  <tr class="summary-total">
-                    <td>Total:</td>
-                    <td>$160.00</td>
-                  </tr><!-- End .summary-total -->
-                  </tbody>
-                </table><!-- End .table table-summary -->
-
-                <a href="checkout.html" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-              </div><!-- End .summary -->
 
               <a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
             </aside><!-- End .col-lg-3 -->
@@ -520,6 +512,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const quantityInputs = document.querySelectorAll('.quantity-input');
+    const shippingOptions = document.querySelectorAll('.shipping-option');
 
     function updateCartTotal() {
       let cartTotal = 0;
@@ -544,15 +537,35 @@
         }
       });
 
+      // Tính giá vận chuyển
+      let shippingCost = 0;
+      const selectedShipping = document.querySelector('.shipping-option:checked');
+      if (selectedShipping) {
+        shippingCost = parseFloat(selectedShipping.dataset.price);
+      }
+
       // Cập nhật tổng tiền giỏ hàng
       const cartTotalElement = document.querySelector('#cart-total');
       if (cartTotalElement) {
         cartTotalElement.textContent = `$${cartTotal.toFixed(2)}`;
       }
+
+      // Cập nhật tổng tiền giỏ hàng cuối cùng
+      cartTotal += shippingCost;
+
+      // Cập nhật tổng tiền giỏ hàng
+      const cartTotalFinalElement = document.querySelector('#cart-total-final');
+      if (cartTotalElement) {
+        cartTotalFinalElement.textContent = `$${cartTotal.toFixed(2)}`;
+      }
     }
 
     quantityInputs.forEach(input => {
       input.addEventListener('input', updateCartTotal);
+    });
+
+    shippingOptions.forEach(option => {
+      option.addEventListener('change', updateCartTotal);
     });
 
     // Gọi hàm cập nhật tổng tiền giỏ hàng ngay khi trang được tải

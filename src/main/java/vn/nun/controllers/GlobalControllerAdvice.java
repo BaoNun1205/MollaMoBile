@@ -42,7 +42,7 @@ public class GlobalControllerAdvice {
             if (cart != null) {
                 List<CartItem> listCartItem = cart.getCartItems();
 
-                double total = 0;
+                double total = 0.00;
                 for (CartItem item : listCartItem) {
                     total += item.getCount() * item.getProduct().getPrice();
                 }
