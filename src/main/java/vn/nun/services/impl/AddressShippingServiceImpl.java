@@ -10,11 +10,14 @@ import vn.nun.models.CustomUserDetail;
 import vn.nun.models.User;
 import vn.nun.repository.AddressShippingRepository;
 import vn.nun.services.AddressShippingService;
+import vn.nun.services.UserService;
 
 @Service
 public class AddressShippingServiceImpl implements AddressShippingService {
     @Autowired
     private AddressShippingRepository addressShippingRepository;
+    @Autowired
+    private UserService userService;
     @Override
     public Boolean save(AddressShipping addressShipping) {
         try {
@@ -38,12 +41,7 @@ public class AddressShippingServiceImpl implements AddressShippingService {
 
     @Override
     public AddressShipping getAddressShippingForCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-        User user = userDetails.getUser();
+        User user = userService.currentUser();
         return findByUser(user);
     }
 }

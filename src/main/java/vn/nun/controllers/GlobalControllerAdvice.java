@@ -7,13 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import vn.nun.models.AddressShipping;
-import vn.nun.models.Cart;
-import vn.nun.models.CartItem;
-import vn.nun.models.Category;
+import vn.nun.models.*;
 import vn.nun.services.AddressShippingService;
 import vn.nun.services.CartService;
 import vn.nun.services.CategoryService;
+import vn.nun.services.UserService;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,13 +49,20 @@ public class GlobalControllerAdvice {
                     total += item.getCount() * item.getProduct().getPrice();
                 }
 
-                model.addAttribute("cart", cart);
-                model.addAttribute("total", total);
-                model.addAttribute("listCartItem", listCartItem);
+                model.addAttribute("cart", cart); //gio hang cua user
+                model.addAttribute("total", total); //tong tien gio hang
+                model.addAttribute("listCartItem", listCartItem); //item trong gio hang
             }
 
+            //truyen dia chi giao hang
             AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
-            model.addAttribute("addressShipping", addressShipping);
+            if (addressShipping != null){
+                model.addAttribute("addressShipping", addressShipping);
+            } else {
+                AddressShipping newAddressShipping = new AddressShipping();
+                model.addAttribute("addressShipping", newAddressShipping);
+            }
+
         }
     }
 }

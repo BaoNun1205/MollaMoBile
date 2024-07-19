@@ -35,7 +35,7 @@
                             <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
                         </form>
                     </div><!-- End .checkout-discount -->
-                    <form action="#">
+                    <form th:action="@{/checkout/place-order}" method="post">
                         <div class="row">
                             <div class="col-lg-6">
                                 <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
@@ -60,7 +60,7 @@
                                 </div><!-- End .custom-checkbox -->
 
                                 <label>Order notes (optional)</label>
-                                <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+                                <textarea class="form-control" cols="30" name="notes" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
                             </div><!-- End .col-lg-6-->
                             <aside class="col-lg-6">
                                 <div class="summary">
@@ -89,6 +89,7 @@
                                         </tr>
                                         <tr class="summary-total">
                                             <td>Total:</td>
+                                            <input type="hidden" name="deliveryId" th:value="${selectedDelivery.id}">
                                             <td th:text="'$' + ${cartTotalFinal}"></td>
                                         </tr><!-- End .summary-total -->
                                         </tbody>

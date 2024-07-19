@@ -10,11 +10,14 @@ import vn.nun.models.CustomUserDetail;
 import vn.nun.models.User;
 import vn.nun.repository.CartRepository;
 import vn.nun.services.CartService;
+import vn.nun.services.UserService;
 
 @Service
 public class CartServiceImpl implements CartService {
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Cart findByUser(User user) {
@@ -23,12 +26,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartForCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-        User user = userDetails.getUser();
+        User user = userService.currentUser();
         return findByUser(user);
     }
 }

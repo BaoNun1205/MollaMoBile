@@ -92,7 +92,7 @@
 
                                                     <!-- Form chỉnh sửa địa chỉ -->
                                                     <form th:action="@{/address-shipping/save-address}" th:object="${addressShipping}" method="post">
-                                                        <input type="hidden" th:field="*{id}" name="addressId">
+                                                        <input type="hidden" th:if="${addressShipping != null}" th:field="*{id}" name="addressId">
 
                                                         <div class="form-group mt-4">
                                                             <label for="recipientName">Recipient Name:</label>

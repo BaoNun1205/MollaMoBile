@@ -118,12 +118,12 @@
                     <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                         <div class="icon">
                             <i class="icon-shopping-cart"></i>
-                            <span class="cart-count" th:text="${cart.cartItems.size()}">0</span>
+                            <span class="cart-count" th:text="${cart.cartItems.size()}"></span>
                         </div>
                         <p>Cart</p>
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right">
+                    <div th:if="${cart.cartItems.size() > 0}" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-cart-products">
                             <div class="product" th:each="cartItem : ${listCartItem}">
                                 <div class="product-cart-details">

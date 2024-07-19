@@ -43,7 +43,7 @@ public class AdminSecurityConfig {
 	SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/add-cart", "/favorite-list").authenticated()
+						.requestMatchers("/account", "/view-cart", "/checkout").authenticated()
 						.anyRequest().permitAll()
 				)
 				.formLogin(login -> login

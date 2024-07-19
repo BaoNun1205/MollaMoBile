@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import vn.nun.models.CartItem;
-import vn.nun.models.Delivery;
-import vn.nun.services.DeliveryService;
+import vn.nun.models.*;
+import vn.nun.services.*;
 
 import java.util.List;
 
@@ -15,6 +14,14 @@ import java.util.List;
 public class CheckoutController {
     @Autowired
     private DeliveryService deliveryService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private OrderPlacedService orderService;
+    @Autowired
+    private OrderItemService orderItemService;
+    @Autowired
+    private CartItemService cartItemService;
     @PostMapping
     public String checkout(@RequestParam("shippingMethodId") Integer shippingMethodId,
                            @ModelAttribute("listCartItem") List<CartItem> cartItemList,
@@ -42,6 +49,9 @@ public class CheckoutController {
     @GetMapping
     public String checkout(@ModelAttribute("listCartItem") List<CartItem> cartItemList, Model model){
 
+        OrderPlaced order = new OrderPlaced();
+        model.addAttribute("order", order);
+
         Delivery freeship = deliveryService.findById(1);
 
         double cartTotal = 0.00;
@@ -59,5 +69,40 @@ public class CheckoutController {
 
         // Tiến hành xử lý thanh toán và chuyển hướng đến trang kết quả thanh toán
         return "user/checkout";
+    }
+
+    @PostMapping("/place-order")
+    public String placeOrder(@ModelAttribute("addressShipping") AddressShipping addressShipping,
+                             @ModelAttribute("listCartItem") List<CartItem> cartItemList,
+                             @RequestParam("deliveryId") Integer deliveryId,
+                             @RequestParam("notes") String notes){
+
+        //Thong tin don dat hang
+        User user = userService.currentUser();
+        OrderPlaced order = OrderPlaced.builder()
+                .user(user)
+                .delivery(deliveryService.findById(deliveryId))
+                .recipientName(addressShipping.getRecipientName())
+                .address(addressShipping.getAddress())
+                .phone(addressShipping.getPhone())
+                .notes(notes)
+                .status("Placed Order")
+                .build();
+
+        order = orderService.create(order);
+
+        //cac item trong don dat hang duoc map tu gio hang
+        for (CartItem cartItem : cartItemList){
+            OrderItem orderItem = OrderItem.builder()
+                    .order(order)
+                    .product(cartItem.getProduct())
+                    .count(cartItem.getCount())
+                    .build();
+
+            orderItemService.save(orderItem);
+            cartItemService.delete(cartItem.getId());// xoa item khoi cart
+        }
+
+        return "redirect:/account";
     }
 }
