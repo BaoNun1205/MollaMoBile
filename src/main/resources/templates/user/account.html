@@ -79,28 +79,47 @@
                                             <div class="card card-dashboard">
                                                 <div class="card-body">
                                                     <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-                                                    <form th:action="@{/save-address}" th:object="${addressShipping}" method="post">
-                                                        <input type="hidden" th:field=*{id}>
+
+<!--                                                    <div>-->
+<!--                                                        <p>User Name<br>-->
+<!--                                                            User Company<br>-->
+<!--                                                            John str<br>-->
+<!--                                                            New York, NY 10001<br>-->
+<!--                                                            1-234-987-6543<br>-->
+<!--                                                            <a href="https://portotheme.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe87918b8c939f9792be939f9792d09d9193">[email&#160;protected]</a><br>-->
+<!--                                                            <a href="#">Edit <i class="icon-edit"></i></a></p>-->
+<!--                                                    </div>-->
+
+                                                    <!-- Form chỉnh sửa địa chỉ -->
+                                                    <form th:action="@{/address-shipping/save-address}" th:object="${addressShipping}" method="post">
+                                                        <input type="hidden" th:field="*{id}" name="addressId">
 
                                                         <div class="form-group mt-4">
                                                             <label for="recipientName">Recipient Name:</label>
-                                                            <input type="text" class="form-control" id="recipientName" th:field=*{recipientName} placeholder="Enter recipient name">
+                                                            <input type="text" class="form-control" id="recipientName"
+                                                                   th:field="*{recipientName}"
+                                                                   placeholder="Enter recipient name">
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="address">Address:</label>
-                                                            <textarea class="form-control" id="address" th:field=*{address} placeholder="Enter address"></textarea>
+                                                            <textarea class="form-control" id="address"
+                                                                      th:field="*{address}"
+                                                                      placeholder="Enter address"></textarea>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="phone">Phone:</label>
-                                                            <input type="text" class="form-control" id="phone" th:field=*{phone} placeholder="Enter phone number">
+                                                            <input type="text" class="form-control" id="phone"
+                                                                   th:field="*{phone}"
+                                                                   placeholder="Enter phone number">
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                            <button type="submit" class="btn btn-outline-primary-2">Save</button>
                                                         </div>
                                                     </form>
+
                                                 </div><!-- End .card-body -->
 
                                             </div><!-- End .card-dashboard -->

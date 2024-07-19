@@ -7,9 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import vn.nun.models.AddressShipping;
 import vn.nun.models.Cart;
 import vn.nun.models.CartItem;
 import vn.nun.models.Category;
+import vn.nun.services.AddressShippingService;
 import vn.nun.services.CartService;
 import vn.nun.services.CategoryService;
 
@@ -20,11 +22,13 @@ import java.util.List;
 public class GlobalControllerAdvice {
     private final CartService cartService;
     private final CategoryService categoryService;
+    private final AddressShippingService addressShippingService;
 
     @Autowired
-    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService) {
+    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService, AddressShippingService addressShippingService) {
         this.cartService = cartService;
         this.categoryService = categoryService;
+        this.addressShippingService = addressShippingService;
     }
 
     @ModelAttribute
@@ -51,6 +55,9 @@ public class GlobalControllerAdvice {
                 model.addAttribute("total", total);
                 model.addAttribute("listCartItem", listCartItem);
             }
+
+            AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
+            model.addAttribute("addressShipping", addressShipping);
         }
     }
 }

@@ -1,8 +1,11 @@
 package vn.nun.services;
 
 import vn.nun.models.AddressShipping;
+import vn.nun.models.User;
 
 public interface AddressShippingService {
-    Boolean create (AddressShipping addressShipping);
+    Boolean save (AddressShipping addressShipping);
     AddressShipping findById(Integer id);
+    AddressShipping findByUser(User user);
+    AddressShipping getAddressShippingForCurrentUser();
 }
