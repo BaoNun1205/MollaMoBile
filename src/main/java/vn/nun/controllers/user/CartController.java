@@ -1,6 +1,8 @@
 package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,5 +50,14 @@ public class CartController {
         return "redirect:/view-cart";
     }
 
-
+    @GetMapping("/delete-item/{id}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable("id") Integer id) {
+        try {
+            cartItemService.delete(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
+    }
 }

@@ -25,9 +25,6 @@ public class HomeController {
 	@Autowired
 	private CategoryService categoryService;
 
-	@Autowired
-	private CartService cartService;
-
 	@GetMapping
 	public String home(Model model) {
 		List<Product> all = this.productService.getAll();
@@ -48,13 +45,4 @@ public class HomeController {
 		model.addAttribute("xiaomis", all);
 		return ("user/index");
 	}
-
-//	@GetMapping("/new-arrivals/{id}")
-//	public String NewArrivalsCategory(Model model, @PathVariable("id") Integer id){
-//		Category category = this.categoryService.findById(id);
-//
-//		List<Product> listProduct = this.productService.findByCategory(category);
-//		model.addAttribute("list", listProduct);
-//		return ("user/index");
-//	}
 }

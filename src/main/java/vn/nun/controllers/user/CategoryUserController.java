@@ -18,13 +18,10 @@ import java.util.List;
 public class CategoryUserController {
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private ProductService productService;
     @GetMapping("/{id}")
     public String DetailCategory(Model model, @PathVariable("id") Integer id){
         Category category = categoryService.findById(id);
-        List<Product> listProduct = this.productService.findByCategory(category);
+        List<Product> listProduct = category.getProducts();
 
         model.addAttribute("category", category);
         model.addAttribute("listProduct", listProduct);

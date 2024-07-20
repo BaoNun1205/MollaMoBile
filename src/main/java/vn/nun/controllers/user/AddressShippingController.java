@@ -1,27 +1,46 @@
 package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vn.nun.dto.AddressShippingDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 import vn.nun.models.AddressShipping;
 import vn.nun.models.User;
 import vn.nun.services.AddressShippingService;
-import vn.nun.services.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/address-shipping")
 public class AddressShippingController {
     @Autowired
     private AddressShippingService addressShippingService;
-    @Autowired
-    private UserService userService;
     @PostMapping("/save-address")
-    public String save(@ModelAttribute("addressShipping") AddressShipping addressShipping){
-        addressShipping.setUser(userService.currentUser());
-        addressShippingService.save(addressShipping);
-        return "redirect:/account";
+    public ResponseEntity<Void> saveAddress(
+            @ModelAttribute("addressShipping") AddressShipping addressShipping,
+            @RequestParam String recipientName,
+            @RequestParam String address,
+            @RequestParam String phone) {
+
+        try {
+            // Xử lý dữ liệu từ các tham số
+            addressShipping.setRecipientName(recipientName);
+            addressShipping.setAddress(address);
+            addressShipping.setPhone(phone);
+
+            addressShippingService.save(addressShipping);
+
+            // Trả về phản hồi thành công
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
+        }
     }
 }

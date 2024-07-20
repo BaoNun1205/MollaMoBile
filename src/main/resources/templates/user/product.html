@@ -104,7 +104,7 @@
                                 </div><!-- End .details-filter-row -->
 
                                 <div class="product-details-action">
-                                    <form class="details-action-col" th:action="@{/product/add-cart}" method="post">
+                                    <form id="add-cart-item-form" class="details-action-col" th:action="@{/product/add-cart}" method="post">
 
                                         <input type="hidden" name="productId" th:value="${product.id}"/>
 
@@ -116,18 +116,7 @@
 
                                         <!-- Nút mở modal đăng nhập cho người dùng chưa đăng nhập -->
                                         <a th:if="${!isAuthenticated}" href="#signin-modal" data-toggle="modal" class="btn-product btn-cart"><span>add to cart</span></a>
-<!--                                        <div th:text="'Is Authenticated: ' + ${isAuthenticated}"></div>-->
                                     </form><!-- End .details-action-col -->
-
-<!--                                    <div class="details-action-col">-->
-
-<!--                                        <div class="product-details-quantity">-->
-<!--                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>-->
-<!--                                        </div>&lt;!&ndash; End .product-details-quantity &ndash;&gt;-->
-
-<!--                                        <a th:href="@{/product/add-cart}" class="btn-product btn-cart"><span>add to cart</span></a>-->
-
-<!--                                    </div>&lt;!&ndash; End .details-action-col &ndash;&gt;-->
 
                                     <div class="details-action-wrapper">
                                         <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -850,19 +839,8 @@
     </div><!-- End .modal-dialog -->
 </div><!-- End .modal -->
 
-<!-- Plugins JS File -->
-<script th:src="@{/fe/js/jquery.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/fe/js/jquery.hoverIntent.min.js}"></script>
-<script th:src="@{/fe/js/jquery.waypoints.min.js}"></script>
-<script th:src="@{/fe/js/superfish.min.js}"></script>
-<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap-input-spinner.js}"></script>
-<script th:src="@{/fe/js/jquery.elevateZoom.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap-input-spinner.js}"></script>
-<script th:src="@{/fe/js/jquery.magnific-popup.min.js}"></script>
-<!-- Main JS File -->
-<script th:src="@{/fe/js/main.js}"></script>
+<div th:replace="user/fragments/script :: script"></div>
+<script th:src="@{/user/product.js}"></script>
 </body>
 
 

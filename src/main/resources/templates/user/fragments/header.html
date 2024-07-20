@@ -37,7 +37,8 @@
 <!--                            <li><a href="#signin-modal" data-toggle="modal" sec:authentication="name"></a></li>-->
 
                             <li th:if="${isAuthenticated}">
-                                <a th:href="@{/account}" sec:authentication="name"></a>
+<!--                                <a th:href="@{/account}" sec:authentication="name"></a>-->
+                                <a th:href="@{/account}" th:text="${currentUser.fullName}"></a>
                             </li>
                             <li th:if="${!isAuthenticated}">
                                 <a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a>
@@ -88,7 +89,7 @@
                     <div class="dropdown-menu dropdown-menu-right">
                         <ul class="compare-products">
                             <li class="compare-product">
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                <a class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
                                 <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
                             </li>
                             <li class="compare-product">
@@ -125,7 +126,7 @@
 
                     <div th:if="${cart.cartItems.size() > 0}" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-cart-products">
-                            <div class="product" th:each="cartItem : ${listCartItem}">
+                            <div class="product" th:each="cartItem : ${listCartItem}" th:id="'item-' + ${cartItem.id}">
                                 <div class="product-cart-details">
                                     <h4 class="product-title">
                                         <a th:href="@{'/product/' + ${cartItem.product.id}}"
@@ -133,9 +134,9 @@
                                     </h4>
 
                                     <span class="cart-product-info">
-                                                <span class="cart-product-qty" th:text="${cartItem.count}"></span>
-                                                <span th:text="'x $' + ${cartItem.product.price}"></span>
-                                            </span>
+                            <span class="cart-product-qty" th:text="${cartItem.count}"></span>
+                            <span th:text="'x $' + ${cartItem.product.price}"></span>
+                        </span>
                                 </div><!-- End .product-cart-details -->
 
                                 <figure class="product-image-container">
@@ -145,20 +146,23 @@
                                              th:data-zoom-image="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}" alt="product">
                                     </a>
                                 </figure>
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+
+                                <!-- Sử dụng thuộc tính data-id cho nút xóa -->
+                                <a href="javascript:void(0);" class="btn-remove" th:onclick="'deleteItem(' + ${cartItem.id} + '); return false;'" title="Remove Product">
+                                    <i class="icon-close"></i>
+                                </a>
                             </div><!-- End .product -->
-                        </div><!-- End .cart-product -->
+                        </div><!-- End .cart-products -->
 
                         <div class="dropdown-cart-total">
                             <span>Total</span>
-
                             <span class="cart-total-price" th:text="'$' + ${total}">$0.00</span>
                         </div><!-- End .dropdown-cart-total -->
 
                         <div class="dropdown-cart-action">
                             <a th:href="@{/view-cart}" class="btn btn-primary">View Cart</a>
                             <a th:href="@{/checkout}" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .dropdown-cart-total -->
+                        </div><!-- End .dropdown-cart-action -->
                     </div><!-- End .dropdown-menu -->
                 </div><!-- End .cart-dropdown -->
             </div><!-- End .header-right -->

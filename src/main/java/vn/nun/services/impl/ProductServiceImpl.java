@@ -18,12 +18,6 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getAll() {
 		return this.productRepository.findAll();
 	}
-
-	@Override
-	public List<Product> findByCategory(Category category) {
-		return this.productRepository.findByCategory(category);
-	}
-
 	@Override
 	public Boolean create(Product product) {
 		try {

@@ -15,11 +15,6 @@ public class ImageServiceImpl implements ImageService {
     private ImageRepository imageRepository;
 
     @Override
-    public List<Image> findByProduct(Product product) {
-        return this.imageRepository.findByProduct(product);
-    }
-
-    @Override
     public Image findById(Integer id) {
         return this.imageRepository.findById(id).get();
     }

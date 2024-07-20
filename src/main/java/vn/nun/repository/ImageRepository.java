@@ -7,5 +7,4 @@ import vn.nun.models.Product;
 import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Integer> {
-    List<Image> findByProduct(Product product);
 }

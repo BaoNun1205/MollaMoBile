@@ -96,7 +96,7 @@
 
                         <div class="products mb-3">
                             <div class="row justify-content-center">
-                                <div class="col-6 col-md-4 col-lg-4" th:each="product : ${listProduct}">
+                                <div class="col-6 col-md-4 col-lg-4" th:each="product : ${listProduct}" th:id="'product-' + ${product.id}">
                                     <div class="product product-7 text-center">
                                         <figure class="product-media">
                                             <span class="product-label label-new">New</span>
@@ -111,7 +111,7 @@
                                             </div><!-- End .product-action-vertical -->
 
                                             <div class="product-action">
-                                                <a th:href="@{'/product/add-cart/' + ${product.id}}" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                <a href="javascript:void(0);" th:onclick="'addToCart(' + ${product.id} + '); return false;'" class="btn-product btn-cart"><span>add to cart</span></a>
                                             </div><!-- End .product-action -->
                                         </figure><!-- End .product-media -->
 
@@ -786,19 +786,7 @@
     </div><!-- End .modal-dialog -->
 </div><!-- End .modal -->
 
-<!-- Plugins JS File -->
-<script th:src="@{/fe/js/jquery.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/fe/js/jquery.hoverIntent.min.js}"></script>
-<script th:src="@{/fe/js/jquery.waypoints.min.js}"></script>
-<script th:src="@{/fe/js/superfish.min.js}"></script>
-<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
-<script th:src="@{/fe/js/wNumb.js}"></script>
-<script th:src="@{/fe/js/bootstrap-input-spinner.js}"></script>
-<script th:src="@{/fe/js/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/fe/js/nouislider.min.js}"></script>
-<!-- Main JS File -->
-<script th:src="@{/fe/js/main.js}"></script>
+<div th:replace="user/fragments/script :: script"></div>
 </body>
 
 

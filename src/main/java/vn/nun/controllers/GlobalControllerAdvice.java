@@ -13,6 +13,7 @@ import vn.nun.services.CartService;
 import vn.nun.services.CategoryService;
 import vn.nun.services.UserService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,12 +22,14 @@ public class GlobalControllerAdvice {
     private final CartService cartService;
     private final CategoryService categoryService;
     private final AddressShippingService addressShippingService;
+    private final UserService userService;
 
     @Autowired
-    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService, AddressShippingService addressShippingService) {
+    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService, AddressShippingService addressShippingService, UserService userService) {
         this.cartService = cartService;
         this.categoryService = categoryService;
         this.addressShippingService = addressShippingService;
+        this.userService = userService;
     }
 
     @ModelAttribute
@@ -40,18 +43,23 @@ public class GlobalControllerAdvice {
         model.addAttribute("isAuthenticated", isAuthenticated);
 
         if (isAuthenticated) {
-            Cart cart = cartService.getCartForCurrentUser();
-            if (cart != null) {
-                List<CartItem> listCartItem = cart.getCartItems();
 
+            User user = userService.currentUser();
+            model.addAttribute("currentUser", user);
+
+            Cart cart = cartService.getCartForCurrentUser();
+
+            List<CartItem> listCartItem = cart.getCartItems();
+
+            if (listCartItem != null){
                 double total = 0.00;
                 for (CartItem item : listCartItem) {
                     total += item.getCount() * item.getProduct().getPrice();
                 }
 
-                model.addAttribute("cart", cart); //gio hang cua user
                 model.addAttribute("total", total); //tong tien gio hang
                 model.addAttribute("listCartItem", listCartItem); //item trong gio hang
+                model.addAttribute("cart", cart);
             }
 
             //truyen dia chi giao hang
@@ -60,6 +68,7 @@ public class GlobalControllerAdvice {
                 model.addAttribute("addressShipping", addressShipping);
             } else {
                 AddressShipping newAddressShipping = new AddressShipping();
+                newAddressShipping.setUser(user);
                 model.addAttribute("addressShipping", newAddressShipping);
             }
 

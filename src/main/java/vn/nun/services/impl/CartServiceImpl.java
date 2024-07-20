@@ -20,6 +20,11 @@ public class CartServiceImpl implements CartService {
     private UserService userService;
 
     @Override
+    public Cart create(Cart cart) {
+        return cartRepository.save(cart);
+    }
+
+    @Override
     public Cart findByUser(User user) {
         return cartRepository.findCartByUser(user);
     }

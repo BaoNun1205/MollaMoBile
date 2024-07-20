@@ -15,8 +15,6 @@ public class CheckoutController {
     @Autowired
     private DeliveryService deliveryService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private OrderPlacedService orderService;
     @Autowired
     private OrderItemService orderItemService;
@@ -74,11 +72,11 @@ public class CheckoutController {
     @PostMapping("/place-order")
     public String placeOrder(@ModelAttribute("addressShipping") AddressShipping addressShipping,
                              @ModelAttribute("listCartItem") List<CartItem> cartItemList,
+                             @ModelAttribute("currentUser") User user,
                              @RequestParam("deliveryId") Integer deliveryId,
                              @RequestParam("notes") String notes){
 
         //Thong tin don dat hang
-        User user = userService.currentUser();
         OrderPlaced order = OrderPlaced.builder()
                 .user(user)
                 .delivery(deliveryService.findById(deliveryId))

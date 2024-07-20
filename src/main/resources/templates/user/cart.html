@@ -10,7 +10,7 @@
 <div class="page-wrapper">
   <div th:replace="user/fragments/header :: header"></div>
 
-  <main class="main">
+  <main th:if="${listCartItem.size() != 0}" class="main">
     <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
       <div class="container">
         <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
@@ -43,7 +43,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="cartItem, iter : ${listCartItem}">
+                  <tr th:each="cartItem, iter : ${listCartItem}" th:id="'item-' + ${cartItem.id}">
                     <td class="product-col">
                       <div class="product">
                         <figure class="product-media">
@@ -63,13 +63,13 @@
                     <td class="quantity-col">
                       <div class="cart-product-quantity">
                         <input type="number" class="form-control quantity-input"
-                               th:name="quantity" th:value="${cartItem.count}" min="1" max="100" step="1" data-decimals="0" required>
+                               name="quantity" th:value="${cartItem.count}" min="1" max="100" step="1" data-decimals="0" required>
                         <!-- Sử dụng input hidden để truyền dữ liệu -->
-                        <input type="hidden" th:name="itemId" th:value="${cartItem.id}">
+                        <input type="hidden" name="itemId" th:value="${cartItem.id}">
                       </div><!-- End .cart-product-quantity -->
                     </td>
                     <td class="total-col" th:text="'$' + (${cartItem.count} * ${cartItem.product.price})"></td>
-                    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+                    <td class="remove-col"><button class="btn-remove" th:onclick="'deleteItem(' + ${cartItem.id} + '); return false;'"><i class="icon-close"></i></button></td>
                   </tr>
                   </tbody>
                 </table><!-- End .table table-cart -->
@@ -144,6 +144,29 @@
         </div><!-- End .container -->
       </div><!-- End .cart -->
     </div><!-- End .page-content -->
+  </main><!-- End .main -->
+
+  <main th:unless="${listCartItem.size() != 0}" class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Pages</a></li>
+          <li class="breadcrumb-item active" aria-current="page">404</li>
+        </ol>
+      </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+      <div class="container">
+        <h1 class="error-title">Cart Empty</h1><!-- End .error-title -->
+        <p>Not have cart item in cart</p>
+        <a href="/" class="btn btn-outline-primary-2 btn-minwidth-lg">
+          <span>BACK TO HOMEPAGE</span>
+          <i class="icon-long-arrow-right"></i>
+        </a>
+      </div><!-- End .container -->
+    </div><!-- End .error-content text-center -->
   </main><!-- End .main -->
 
   <footer class="footer">
@@ -573,16 +596,7 @@
   });
 </script>
 
-<!-- Plugins JS File -->
-<script th:src="@{/fe/js/jquery.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/fe/js/jquery.hoverIntent.min.js}"></script>
-<script th:src="@{/fe/js/jquery.waypoints.min.js}"></script>
-<script th:src="@{/fe/js/superfish.min.js}"></script>
-<script th:src="@{/fe/js/owl.carousel.min.js}"></script>
-<script th:src="@{/fe/js/bootstrap-input-spinner.js}"></script>
-<!-- Main JS File -->
-<script th:src="@{/fe/js/main.js}"></script>
+<div th:replace="user/fragments/script :: script"></div>
 </body>
 
 

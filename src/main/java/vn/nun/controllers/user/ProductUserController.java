@@ -1,6 +1,8 @@
 package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +16,10 @@ import java.util.List;
 public class ProductUserController {
     @Autowired
     private ProductService productService;
-
     @Autowired
-    private CategoryService categoryService;
+    private CartService cartService;
+    @Autowired
+    private CartItemService cartItemService;
 
     @GetMapping("/{id}")
     public String DetailProduct(Model model, @PathVariable("id") Integer id){
@@ -25,58 +28,60 @@ public class ProductUserController {
 		return ("user/product");
     }
 
-    @Autowired
-    private CartService cartService;
-
-    @Autowired
-    private CartItemService cartItemService;
-
     @PostMapping("/add-cart")
-    public String AddCartItem(Model model, @RequestParam("productId") Integer productId, @RequestParam("count") Integer count,  @ModelAttribute("isAuthenticated") boolean isAuthenticated){
-        if (!isAuthenticated) {
-            return "redirect:/login";
+    public ResponseEntity<Void> AddCartItem(@RequestParam("productId") Integer productId,
+                                      @RequestParam("count") Integer count){
+        try {
+            //Lat cart cua nguoi dung
+            Cart cart = cartService.getCartForCurrentUser();
+
+            Product product = productService.findById(productId);
+            if (cartItemService.existProduct(cart, product)){
+                CartItem cartItem = cartItemService.findByProduct(cart, product);
+                cartItem.setCount(cartItem.getCount() + count);
+                cartItemService.update(cartItem);
+            } else {
+                CartItem cartItem = new CartItem();
+                cartItem.setCart(cart);
+                cartItem.setProduct(product);
+                cartItem.setCount(count);
+                cartItemService.create(cartItem);
+            }
+
+            // Trả về phản hồi thành công
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (Exception e){
+            e.printStackTrace();
+            // Trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
-
-        Cart cart = cartService.getCartForCurrentUser();
-
-        Product product = productService.findById(productId);
-        if (cartItemService.existProduct(cart, product)){
-            CartItem cartItem = cartItemService.findByProduct(cart, product);
-            cartItem.setCount(cartItem.getCount() + count);
-            cartItemService.update(cartItem);
-        } else {
-            CartItem cartItem = new CartItem();
-            cartItem.setCart(cart);
-            cartItem.setProduct(product);
-            cartItem.setCount(count);
-            cartItemService.create(cartItem);
-        }
-
-        // Redirect to product details page after adding to cart
-        return "redirect:/product/" + productId;
     }
 
     @GetMapping ("/add-cart/{id}")
-    public String AddOneCartItem(Model model, @PathVariable("id") Integer productId, @ModelAttribute("isAuthenticated") boolean isAuthenticated){
-        if (!isAuthenticated) {
-            return "redirect:/login";
+    public ResponseEntity<Void> AddOneCartItem(@PathVariable("id") Integer productId){
+
+        try {
+            Cart cart = cartService.getCartForCurrentUser();
+
+            Product product = productService.findById(productId);
+            if (cartItemService.existProduct(cart, product)){
+                CartItem cartItem = cartItemService.findByProduct(cart, product);
+                cartItem.setCount(cartItem.getCount() + 1);
+                cartItemService.update(cartItem);
+            } else {
+                CartItem cartItem = new CartItem();
+                cartItem.setCart(cart);
+                cartItem.setProduct(product);
+                cartItem.setCount(1);
+                cartItemService.create(cartItem);
+            }
+
+            // Trả về phản hồi thành công
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (Exception e){
+            e.printStackTrace();
+            // Trả về phản hồi lỗi
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 Internal Server Error
         }
-
-        Cart cart = cartService.getCartForCurrentUser();
-
-        Product product = productService.findById(productId);
-        if (cartItemService.existProduct(cart, product)){
-            CartItem cartItem = cartItemService.findByProduct(cart, product);
-            cartItem.setCount(cartItem.getCount() + 1);
-            cartItemService.update(cartItem);
-        } else {
-            CartItem cartItem = new CartItem();
-            cartItem.setCart(cart);
-            cartItem.setProduct(product);
-            cartItem.setCount(1);
-            cartItemService.create(cartItem);
-        }
-
-        return "redirect:/";
     }
 }

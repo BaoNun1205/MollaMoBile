@@ -30,12 +30,6 @@ public class User {
 	@Column(name = "fullname")
 	private String fullName;
 	
-	@Column(name = "gender")
-	private Boolean gender;
-
-	@Column(name = "address")
-	private String address;
-	
 	@Column(name = "email")
 	private String email;
 	
@@ -45,6 +39,6 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<UserRole> userRoles;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	private Cart cart;
 }
