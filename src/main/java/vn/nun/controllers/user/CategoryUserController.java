@@ -1,23 +1,29 @@
 package vn.nun.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import vn.nun.models.Category;
+import vn.nun.models.Image;
 import vn.nun.models.Product;
 import vn.nun.services.CategoryService;
 import vn.nun.services.ProductService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/category")
 public class CategoryUserController {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ProductService productService;
     @GetMapping("/{id}")
     public String DetailCategory(Model model, @PathVariable("id") Integer id){
         Category category = categoryService.findById(id);
@@ -27,4 +33,56 @@ public class CategoryUserController {
         model.addAttribute("listProduct", listProduct);
         return ("user/category");
     }
+
+    @PostMapping("/filter-products")
+    public ResponseEntity<Map<String, Object>> filterProducts(@RequestBody Map<String, Object> requestBody) {
+        List<String> filters = (List<String>) requestBody.get("filters");
+        Integer categoryId = (Integer) requestBody.get("categoryId");
+
+        if (filters == null) {
+            filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
+        }
+
+        List<Product> products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId));
+        for (Product product : products){
+            for (Image image : product.getImages()){
+                image.setProduct(null);
+            }
+            product.setCategory(null);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", products);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/filter-products-by-price-slide")
+    public ResponseEntity<Map<String, Object>> filterProductsByPriceSlider(@RequestBody Map<String, Object> requestBody) {
+        List<String> filters = (List<String>) requestBody.get("filters");
+        Double minPrice = (Double) requestBody.get("minPrice");
+        Double maxPrice = (Double) requestBody.get("maxPrice");
+        Integer categoryId = (Integer) requestBody.get("categoryId");
+
+        if (filters == null) {
+            filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
+        }
+
+        List<Product> products = productService.filterByPriceSliderAndCategory(200.00, 400.00, categoryService.findById(3));
+//        if (minPrice != null && maxPrice != null) {
+//            products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
+//        } else {
+//            products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
+//        }
+
+        for (Product product : products) {
+            for (Image image : product.getImages()){
+                image.setProduct(null);
+            }
+            product.setCategory(null);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", products);
+        return ResponseEntity.ok(response);
+    }
+
 }

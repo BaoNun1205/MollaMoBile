@@ -1,12 +1,14 @@
 package vn.nun.services.impl;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.nun.models.Category;
 import vn.nun.models.Product;
 import vn.nun.repository.ProductRepository;
+import vn.nun.services.CategoryService;
 import vn.nun.services.ProductService;
 
 @Service
@@ -56,4 +58,70 @@ public class ProductServiceImpl implements ProductService {
 		return false;
 	}
 
+	@Override
+	public List<Product> filterByPriceAndCategory(List<String> filters, Category category) {
+		if (filters == null || filters.isEmpty()) {
+			// Nếu không có bộ lọc, trả về tất cả các sản phẩm
+			return category.getProducts();
+		}
+
+		Set<Product> filteredProducts = new HashSet<>();
+
+		for (String filter : filters) {
+			Double minPrice = null;
+			Double maxPrice = null;
+
+			switch (filter) {
+				case "price-1":
+					minPrice = 0.00;
+					maxPrice = 200.00;
+					break;
+				case "price-2":
+					minPrice = 200.00;
+					maxPrice = 400.00;
+					break;
+				case "price-3":
+					minPrice = 400.00;
+					maxPrice = 600.00;
+					break;
+				case "price-4":
+					minPrice = 600.00;
+					maxPrice = 800.00;
+					break;
+				case "price-5":
+					minPrice = 800.00;
+					maxPrice = 1200.00;
+					break;
+				case "price-6":
+					minPrice = 1200.00;
+					// Không cần thiết đặt maxPrice vì không giới hạn trên
+					break;
+				default:
+					break;
+			}
+
+			if (minPrice != null && maxPrice != null) {
+				filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+			} else if (minPrice != null) {
+				filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndCategory(minPrice, category));
+			} else if (maxPrice != null) {
+				filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndCategory(maxPrice, category));
+			}
+		}
+		List<Product> sortedProducts = filteredProducts.stream()
+				.sorted(Comparator.comparingDouble(Product::getPrice))
+				.collect(Collectors.toList());
+
+		return sortedProducts;
+	}
+
+	@Override
+	public List<Product> filterByPriceSliderAndCategory(Double minPrice, Double maxPrice, Category category) {
+		Set<Product> filteredProducts = new HashSet<>();
+		filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+		List<Product> sortedProducts = filteredProducts.stream()
+				.sorted(Comparator.comparingDouble(Product::getPrice))
+				.collect(Collectors.toList());
+		return sortedProducts;
+	}
 }

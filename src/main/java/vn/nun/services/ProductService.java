@@ -11,4 +11,6 @@ public interface ProductService {
 	Product findById(Integer id);
 	Boolean update(Product product);
 	Boolean delete(Integer id);
+	List<Product> filterByPriceAndCategory(List<String> filters, Category category);
+	List<Product> filterByPriceSliderAndCategory(Double min, Double max, Category category);
 }

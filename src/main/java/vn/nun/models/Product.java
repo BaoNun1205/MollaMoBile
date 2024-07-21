@@ -37,7 +37,7 @@ public class Product {
 	@JoinColumn(name = "categoryId", referencedColumnName = "id")
 	private Category category;
 
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
 	private List<Image> images;
 
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

@@ -169,14 +169,17 @@ $(document).ready(function () {
 		// to prevent error logs
 		if (priceSlider == null) return;
 
+        // Lấy categoryId từ phần tử cha chứa slider
+        var categoryId = 3;
+
 		noUiSlider.create(priceSlider, {
-			start: [ 0, 750 ],
+			start: [ 0, 800 ],
 			connect: true,
 			step: 50,
 			margin: 200,
 			range: {
 				'min': 0,
-				'max': 1000
+				'max': 2000
 			},
 			tooltips: true,
 			format: wNumb({
@@ -188,6 +191,13 @@ $(document).ready(function () {
 		// Update Price Range
 		priceSlider.noUiSlider.on('update', function( values, handle ){
 			$('#filter-price-range').text(values.join(' - '));
+
+            // Lấy giá trị min và max từ slider
+            var minPrice = parseFloat(values[0].replace('$', ''));
+            var maxPrice = parseFloat(values[1].replace('$', ''));
+
+            // Gọi hàm filterProducts với minPrice và maxPrice
+            filterByPriceSliderAndCategoryId(200, 400, categoryId);
 		});
 	}
 

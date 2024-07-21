@@ -23,4 +23,8 @@ public class Image {
 
     @Column(name = "image")
     private String image;
+
+    public String getUrl() {
+        return "/uploads/" + image;
+    }
 }
