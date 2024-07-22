@@ -161,47 +161,54 @@ $(document).ready(function () {
         });
     }
 
-    // Slider For category pages / filter price
-    if ( typeof noUiSlider === 'object' ) {
-		var priceSlider  = document.getElementById('price-slider');
+    // // Slider For category pages / filter price
+    // if ( typeof noUiSlider === 'object' ) {
+	// 	var priceSlider  = document.getElementById('price-slider');
+    //
+	// 	// Check if #price-slider elem is exists if not return
+	// 	// to prevent error logs
+	// 	if (priceSlider == null) return;
+    //
+    //     // Lấy categoryId từ phần tử cha chứa slider
+    //     // Lấy giá trị categoryId từ thuộc tính data-category-id
+    //     var widgetElement = document.getElementById('widget-5');
+    //     const categoryId = parseInt(widgetElement.getAttribute('data-category-id'), 10);
+    //
+	// 	noUiSlider.create(priceSlider, {
+	// 		start: [ 0, 800 ],
+	// 		connect: true,
+	// 		step: 50,
+	// 		margin: 200,
+	// 		range: {
+	// 			'min': 0,
+	// 			'max': 2000
+	// 		},
+	// 		tooltips: true,
+	// 		format: wNumb({
+	// 	        decimals: 0,
+	// 	        prefix: '$'
+	// 	    })
+	// 	});
+    //
+	// 	// Update Price Range
+	// 	priceSlider.noUiSlider.on('update', function( values, handle ){
+    //         // Lấy giá trị min và max từ slider
+    //         var minPrice = parseFloat(values[0].replace('$', ''));
+    //         var maxPrice = parseFloat(values[1].replace('$', ''));
+	// 		$('#filter-price-range').text(values.join(' - '));
+    //
+    //         // Bỏ chọn tất cả các checkbox
+    //         document.querySelectorAll('.filter-item input[type="checkbox"]:checked').forEach(checkbox => {
+    //             checkbox.checked = false;
+    //         });
+    //
+    //         // Gọi hàm filterProducts với minPrice và maxPrice
+    //         filterProducts(minPrice, maxPrice, categoryId);
+	// 	});
+	// }
 
-		// Check if #price-slider elem is exists if not return
-		// to prevent error logs
-		if (priceSlider == null) return;
 
-        // Lấy categoryId từ phần tử cha chứa slider
-        var categoryId = 3;
-
-		noUiSlider.create(priceSlider, {
-			start: [ 0, 800 ],
-			connect: true,
-			step: 50,
-			margin: 200,
-			range: {
-				'min': 0,
-				'max': 2000
-			},
-			tooltips: true,
-			format: wNumb({
-		        decimals: 0,
-		        prefix: '$'
-		    })
-		});
-
-		// Update Price Range
-		priceSlider.noUiSlider.on('update', function( values, handle ){
-			$('#filter-price-range').text(values.join(' - '));
-
-            // Lấy giá trị min và max từ slider
-            var minPrice = parseFloat(values[0].replace('$', ''));
-            var maxPrice = parseFloat(values[1].replace('$', ''));
-
-            // Gọi hàm filterProducts với minPrice và maxPrice
-            filterByPriceSliderAndCategoryId(200, 400, categoryId);
-		});
-	}
-
-	// Product countdown
+    // Product countdown
 	if ( $.fn.countdown ) {
 		$('.product-countdown').each(function () {
 			var $this = $(this), 

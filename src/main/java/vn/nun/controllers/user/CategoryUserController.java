@@ -1,5 +1,6 @@
 package vn.nun.controllers.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 @RequestMapping("/category")
 public class CategoryUserController {
     @Autowired
@@ -37,13 +39,42 @@ public class CategoryUserController {
     @PostMapping("/filter-products")
     public ResponseEntity<Map<String, Object>> filterProducts(@RequestBody Map<String, Object> requestBody) {
         List<String> filters = (List<String>) requestBody.get("filters");
-        Integer categoryId = (Integer) requestBody.get("categoryId");
+        // Chuyển đổi giá trị minPrice và maxPrice từ String sang Double
+        Double minPrice = null;
+        Double maxPrice = null;
+        try {
+            if (requestBody.get("minPrice") != null) {
+                minPrice = Double.parseDouble(requestBody.get("minPrice").toString());
+            }
+            if (requestBody.get("maxPrice") != null) {
+                maxPrice = Double.parseDouble(requestBody.get("maxPrice").toString());
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace(); // Xử lý lỗi nếu giá trị không thể chuyển đổi
+        }
+
+        // Chuyển đổi giá trị categoryId từ String sang Integer
+        Integer categoryId = null;
+        try {
+            if (requestBody.get("categoryId") != null) {
+                categoryId = Integer.parseInt(requestBody.get("categoryId").toString());
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace(); // Xử lý lỗi nếu giá trị không thể chuyển đổi
+        }
 
         if (filters == null) {
             filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
         }
 
-        List<Product> products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId));
+        List<Product> products;
+
+        if (minPrice != null && maxPrice != null) {
+            products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
+        } else {
+            products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
+        }
+
         for (Product product : products){
             for (Image image : product.getImages()){
                 image.setProduct(null);
@@ -55,18 +86,22 @@ public class CategoryUserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/filter-products-by-price-slide")
+    @PostMapping("/filter-products-by-price-slider")
     public ResponseEntity<Map<String, Object>> filterProductsByPriceSlider(@RequestBody Map<String, Object> requestBody) {
         List<String> filters = (List<String>) requestBody.get("filters");
         Double minPrice = (Double) requestBody.get("minPrice");
         Double maxPrice = (Double) requestBody.get("maxPrice");
         Integer categoryId = (Integer) requestBody.get("categoryId");
 
-        if (filters == null) {
-            filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
-        }
+//        log.info("Min Price: " + minPrice);
+//        log.info("Max Price: " + maxPrice);
+//        log.info("Category ID: " + categoryId);
+//
+//        if (filters == null) {
+//            filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
+//        }
 
-        List<Product> products = productService.filterByPriceSliderAndCategory(200.00, 400.00, categoryService.findById(3));
+        List<Product> products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(3));
 //        if (minPrice != null && maxPrice != null) {
 //            products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
 //        } else {
