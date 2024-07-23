@@ -33,7 +33,7 @@
                         <div class="toolbox">
                             <div class="toolbox-left">
                                 <div class="toolbox-info">
-                                    Showing <span>9 of 56</span> Products
+                                    Showing <span>9 of <span class="product-quantity"></span></span> Products
                                 </div><!-- End .toolbox-info -->
                             </div><!-- End .toolbox-left -->
 
@@ -94,7 +94,7 @@
                             </div><!-- End .toolbox-right -->
                         </div><!-- End .toolbox -->
 
-                        <div class="products mb-3">
+                        <div class="products mb-3" id="products-empty">
                             <div class="row" id="product-list">
                                 <div class="col-6 col-md-4 col-lg-4" th:each="product : ${listProduct}" th:id="'product-' + ${product.id}">
                                     <div class="product product-7 text-center">
@@ -220,7 +220,7 @@
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="collapse show" id="widget-5" th:data-category-id="${category.id}">
+                                            <div class="collapse show" id="widget-5" th:data-category-id="${category.id}" th:data-isAuthenticated="${isAuthenticated}">
                                                 <div class="widget-body">
                                                     <div class="filter-price">
                                                         <div class="filter-price-text">

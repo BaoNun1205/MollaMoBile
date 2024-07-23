@@ -80,8 +80,10 @@ public class CategoryUserController {
                 image.setProduct(null);
             }
             product.setCategory(null);
+            product.setCartItem(null);
         }
         Map<String, Object> response = new HashMap<>();
+        response.put("totalCount", products.size());
         response.put("products", products);
         return ResponseEntity.ok(response);
     }
