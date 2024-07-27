@@ -1,5 +1,6 @@
 package vn.nun.models;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -41,4 +42,7 @@ public class User {
 
 	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	private Cart cart;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private List<OrderPlaced> orderPlaceds;
 }

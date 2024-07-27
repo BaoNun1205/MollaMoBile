@@ -43,4 +43,9 @@ public class OrderPlacedServiceImpl implements OrderPlacedService {
     public Boolean delete(Integer id) {
         return null;
     }
+
+    @Override
+    public void deleteByOrderItemsIsEmpty() {
+        orderRepository.deleteByOrderItemsIsEmpty();
+    }
 }

@@ -10,4 +10,5 @@ public interface OrderPlacedService {
     OrderPlaced create(OrderPlaced order);
     Boolean updateStatus(OrderPlaced order, String status);
     Boolean delete(Integer id);
+    void deleteByOrderItemsIsEmpty();
 }

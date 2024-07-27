@@ -7,6 +7,8 @@ import vn.nun.models.OrderItem;
 import vn.nun.repository.OrderItemRepository;
 import vn.nun.services.OrderItemService;
 
+import java.util.List;
+
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
     @Autowired
@@ -20,5 +22,10 @@ public class OrderItemServiceImpl implements OrderItemService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<OrderItem> findByOrder(OrderPlaced orderPlaced) {
+        return orderItemRepository.findOrderItemByOrder(orderPlaced);
     }
 }

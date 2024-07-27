@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+  <div th:replace="admin/fragments/header :: header"></div>
+
+  <!-- =============================================== -->
+
+  <!-- Left side column. contains the sidebar -->
+  <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+
+  <!-- =============================================== -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Blank page
+        <small>it all starts here</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Examples</a></li>
+        <li class="active">Blank page</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Bordered Table</h3>
+        </div>
+
+        <div class="box-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <th style="width: 10px">ID</th>
+              <th>Recipient Name</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Notes</th>
+              <th>Delivery</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+
+            <tr th:each="order : ${list}">
+              <td th:text="${order.id}"></td>
+              <td th:text="${order.user.fullName}"></td>
+              <td th:text="${order.phone}"></td>
+              <td th:text="${order.address}"></td>
+              <td th:text="${order.notes}"></td>
+              <td th:text="${order.delivery.name}"></td>
+              <td>
+                <div class="form-group">
+                  <select class="form-control select2" style="width: 100%;" th:id="'status-' + ${order.id}" name="status">
+                    <option th:value="'Placed Order'" th:text="'Placed Order'"
+                            th:selected="${order.status == 'Placed Order'}"></option>
+                    <option th:value="'Wait for confirmation'" th:text="'Wait for confirmation'"
+                            th:selected="${order.status == 'Wait for confirmation'}"></option>
+                    <option th:value="'Wait for delivery'" th:text="'Wait for delivery'"
+                            th:selected="${order.status == 'Wait for delivery'}"></option>
+                    <option th:value="'Delivering'" th:text="'Delivering'"
+                            th:selected="${order.status == 'Delivering'}"></option>
+                    <option th:value="'Delivered successfully'" th:text="'Delivered successfully'"
+                            th:selected="${order.status == 'Delivered successfully'}"></option>
+                    <option th:value="'Delivered failed'" th:text="'Delivered failed'"
+                            th:selected="${order.status == 'Delivered failed'}"></option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-success" th:onclick="'updateStatus(' + ${order.id} + ')'">Update</button>
+                <a class="btn btn-success"
+                   th:href="@{/admin/detail-order/{id}(id=${order.id})}">Detail</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box-footer clearfix">
+          <ul class="pagination pagination-sm no-margin pull-right">
+            <li><a href="#">«</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">»</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div th:replace="admin/fragments/footer :: footer"></div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+
+<div th:replace="admin/fragments/scripts :: scripts"></div>
+
+<script>
+  function updateStatus(orderId) {
+    var status = document.getElementById('status-' + orderId).value;
+
+    fetch('/admin/update-status-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        'id': orderId,
+        'status': status
+      })
+    })
+            .then(response => response.text())
+            .then(result => {
+              location.reload();
+            })
+            .catch(error => {
+              alert('An error occurred: ' + error);
+            });
+  }
+</script>
+
+</body>
+</html>

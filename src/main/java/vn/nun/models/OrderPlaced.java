@@ -27,7 +27,7 @@ public class OrderPlaced {
     @JoinColumn(name = "deliveryId", referencedColumnName = "id")
     private Delivery delivery;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     List<OrderItem> orderItems;
 
     private String recipientName;
