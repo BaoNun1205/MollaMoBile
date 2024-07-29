@@ -8,10 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import vn.nun.models.*;
-import vn.nun.services.AddressShippingService;
-import vn.nun.services.CartService;
-import vn.nun.services.CategoryService;
-import vn.nun.services.UserService;
+import vn.nun.services.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,18 +20,21 @@ public class GlobalControllerAdvice {
     private final CategoryService categoryService;
     private final AddressShippingService addressShippingService;
     private final UserService userService;
+    private final WishListService wishListService;
 
     @Autowired
-    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService, AddressShippingService addressShippingService, UserService userService) {
+    public GlobalControllerAdvice(CartService cartService, CategoryService categoryService, AddressShippingService addressShippingService, UserService userService, WishListService wishListService) {
         this.cartService = cartService;
         this.categoryService = categoryService;
         this.addressShippingService = addressShippingService;
         this.userService = userService;
+        this.wishListService = wishListService;
     }
 
     @ModelAttribute
     public void addAttributes(Model model) {
 
+        //hien thi cac danh muc
         List<Category> listCate = this.categoryService.getAll();
         model.addAttribute("listCate", listCate);
 
@@ -44,22 +44,43 @@ public class GlobalControllerAdvice {
 
         if (isAuthenticated) {
 
+            //hien thi thong tin nguoi dung hien tai
             User user = userService.currentUser();
             model.addAttribute("currentUser", user);
 
             Cart cart = cartService.getCartForCurrentUser();
 
-            List<CartItem> listCartItem = cart.getCartItems();
+            if (cart == null){
+                Cart newCart = new Cart();
+                newCart.setUser(user);
+                cartService.create(newCart);
 
-            if (listCartItem != null){
-                double total = 0.00;
-                for (CartItem item : listCartItem) {
-                    total += item.getCount() * item.getProduct().getPrice();
+                model.addAttribute("total", 0); //tong tien gio hang
+                model.addAttribute("cart", newCart);
+            } else {
+                List<CartItem> listCartItem = cart.getCartItems();
+
+                if (listCartItem != null){
+                    double total = 0.00;
+                    for (CartItem item : listCartItem) {
+                        total += item.getCount() * item.getProduct().getPrice();
+                    }
+
+                    model.addAttribute("total", total); //tong tien gio hang
+                    model.addAttribute("cart", cart);
                 }
+            }
 
-                model.addAttribute("total", total); //tong tien gio hang
-                model.addAttribute("listCartItem", listCartItem); //item trong gio hang
-                model.addAttribute("cart", cart);
+            WishList wishList = wishListService.getWishlistCurrentUser();
+
+            if (wishList == null){
+                WishList newWishlist = new WishList();
+                newWishlist.setUser(user);
+                wishListService.create(newWishlist);
+
+                model.addAttribute("wishlist", newWishlist);
+            } else {
+                model.addAttribute("wishlist", wishList);
             }
 
             //truyen dia chi giao hang

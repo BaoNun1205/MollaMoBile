@@ -75,7 +75,7 @@
                                         </thead>
 
                                         <tbody>
-                                        <tr th:each="cartItem : ${listCartItem}">
+                                        <tr th:each="cartItem : ${cart.cartItems}">
                                             <td><a href="#" th:text="${cartItem.product.productName}"></a></td>
                                             <td th:text="${cartItem.count} + ' x $' + ${cartItem.product.price}"></td>
                                         </tr>

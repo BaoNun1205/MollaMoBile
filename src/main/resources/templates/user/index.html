@@ -271,12 +271,13 @@
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
+                                    <a th:if="${isAuthenticated}" href="javascript:void(0);" th:onclick="'addToWishlist(' + ${product.id} + '); return false;'" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
+                                    <a th:if="${!isAuthenticated}" href="#signin-modal" data-toggle="modal" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
                                 </div><!-- End .product-action -->
 
                                 <div class="product-action">
-                                    <a th:if="${isAuthenticated}" href="javascript:void(0);" th:onclick="'addToCart(' + ${product.id} + '); return false;'" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                                    <a th:if="${!isAuthenticated}" class="btn-product btn-cart" href="#signin-modal" data-toggle="modal" title="Add to cart"><span>add to cart</span></a>
+                                    <a th:if="${isAuthenticated}" href="javascript:void(0);" th:onclick="'addToCart(' + ${product.id} + '); return false;'" class="btn-product btn-cart" title="Add to cart"></a>
+                                    <a th:if="${!isAuthenticated}" class="btn-product btn-cart" href="#signin-modal" data-toggle="modal" title="Add to cart"></a>
                                     <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->

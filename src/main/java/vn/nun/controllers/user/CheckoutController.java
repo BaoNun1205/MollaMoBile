@@ -22,13 +22,13 @@ public class CheckoutController {
     private CartItemService cartItemService;
     @PostMapping
     public String checkout(@RequestParam("shippingMethodId") Integer shippingMethodId,
-                           @ModelAttribute("listCartItem") List<CartItem> cartItemList,
+                           @ModelAttribute("cart") Cart cart,
                            Model model) {
         // Tìm đối tượng Delivery từ shippingMethodId
         Delivery selectedDelivery = deliveryService.findById(shippingMethodId);
 
         double cartTotal = 0.00;
-        for (CartItem cartItem : cartItemList){
+        for (CartItem cartItem : cart.getCartItems()){
             cartTotal += (cartItem.getCount() * cartItem.getProduct().getPrice());
         }
 
@@ -45,7 +45,7 @@ public class CheckoutController {
     }
 
     @GetMapping
-    public String checkout(@ModelAttribute("listCartItem") List<CartItem> cartItemList, Model model){
+    public String checkout(@ModelAttribute("cart") Cart cart, Model model){
 
         OrderPlaced order = new OrderPlaced();
         model.addAttribute("order", order);
@@ -53,7 +53,7 @@ public class CheckoutController {
         Delivery freeship = deliveryService.findById(1);
 
         double cartTotal = 0.00;
-        for (CartItem cartItem : cartItemList){
+        for (CartItem cartItem : cart.getCartItems()){
             cartTotal += (cartItem.getCount() * cartItem.getProduct().getPrice());
         }
 
@@ -71,7 +71,7 @@ public class CheckoutController {
 
     @PostMapping("/place-order")
     public String placeOrder(@ModelAttribute("addressShipping") AddressShipping addressShipping,
-                             @ModelAttribute("listCartItem") List<CartItem> cartItemList,
+                             @ModelAttribute("cart") Cart cart,
                              @ModelAttribute("currentUser") User user,
                              @RequestParam("deliveryId") Integer deliveryId,
                              @RequestParam("notes") String notes){
@@ -90,7 +90,7 @@ public class CheckoutController {
         order = orderService.create(order);
 
         //cac item trong don dat hang duoc map tu gio hang
-        for (CartItem cartItem : cartItemList){
+        for (CartItem cartItem : cart.getCartItems()){
             OrderItem orderItem = OrderItem.builder()
                     .order(order)
                     .product(cartItem.getProduct())

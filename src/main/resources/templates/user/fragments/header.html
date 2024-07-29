@@ -106,10 +106,10 @@
                 </div><!-- End .compare-dropdown -->
 
                 <div class="wishlist">
-                    <a href="wishlist.html" title="Wishlist">
+                    <a th:href="@{/wish-list}" title="Wishlist">
                         <div class="icon">
                             <i class="icon-heart-o"></i>
-                            <span class="wishlist-count badge">3</span>
+                            <span class="wishlist-count badge" th:text="${wishlist.wishListItems.size()}"></span>
                         </div>
                         <p>Wishlist</p>
                     </a>
@@ -124,9 +124,9 @@
                         <p>Cart</p>
                     </a>
 
-                    <div th:if="${cart.cartItems.size() > 0}" class="dropdown-menu dropdown-menu-right">
+                    <div th:if="${!cart.cartItems.isEmpty()}" class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-cart-products">
-                            <div class="product" th:each="cartItem : ${listCartItem}" th:id="'item-' + ${cartItem.id}">
+                            <div class="product" th:each="cartItem : ${cart.cartItems}" th:id="'item-' + ${cartItem.id}">
                                 <div class="product-cart-details">
                                     <h4 class="product-title">
                                         <a th:href="@{'/product/' + ${cartItem.product.id}}"
@@ -148,7 +148,7 @@
                                 </figure>
 
                                 <!-- Sử dụng thuộc tính data-id cho nút xóa -->
-                                <a href="javascript:void(0);" class="btn-remove" th:onclick="'deleteItem(' + ${cartItem.id} + '); return false;'" title="Remove Product">
+                                <a href="javascript:void(0);" class="btn-remove" th:onclick="'deleteCartItem(' + ${cartItem.id} + '); return false;'" title="Remove Product">
                                     <i class="icon-close"></i>
                                 </a>
                             </div><!-- End .product -->
