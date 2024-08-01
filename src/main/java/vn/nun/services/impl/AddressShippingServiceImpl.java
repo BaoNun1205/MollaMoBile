@@ -19,14 +19,8 @@ public class AddressShippingServiceImpl implements AddressShippingService {
     @Autowired
     private UserService userService;
     @Override
-    public Boolean save(AddressShipping addressShipping) {
-        try {
-            addressShippingRepository.save(addressShipping);
-            return true;
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
+    public AddressShipping save(AddressShipping addressShipping) {
+        return addressShippingRepository.save(addressShipping);
     }
 
     @Override

@@ -12,9 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class AdminSecurityConfig {
-//	@Autowired
-//	private CustomUserDetailService customUserDetailService;
+public class SecurityConfig {
 
 	@Bean
 	@Order(2)
@@ -34,6 +32,9 @@ public class AdminSecurityConfig {
 				.logout(logout -> logout
 						.logoutUrl("/admin-logout")
 						.logoutSuccessUrl("/logon")
+				)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 				);
 		return http.build();
 	}
@@ -56,6 +57,9 @@ public class AdminSecurityConfig {
 				.logout(logout -> logout
 						.logoutUrl("/user-logout")
 						.logoutSuccessUrl("/")
+				)
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 				);
 		return http.build();
 	}

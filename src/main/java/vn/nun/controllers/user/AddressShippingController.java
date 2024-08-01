@@ -22,12 +22,12 @@ public class AddressShippingController {
     private AddressShippingService addressShippingService;
     @PostMapping("/save-address")
     public ResponseEntity<Void> saveAddress(
-            @ModelAttribute("addressShipping") AddressShipping addressShipping,
             @RequestParam String recipientName,
             @RequestParam String address,
             @RequestParam String phone) {
 
         try {
+            AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
             // Xử lý dữ liệu từ các tham số
             addressShipping.setRecipientName(recipientName);
             addressShipping.setAddress(address);

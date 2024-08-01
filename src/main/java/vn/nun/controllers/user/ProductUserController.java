@@ -29,7 +29,7 @@ public class ProductUserController {
     }
 
     @PostMapping("/add-cart")
-    public ResponseEntity<Void> AddCartItem(@RequestParam("productId") Integer productId,
+    public ResponseEntity<?> AddCartItem(@RequestParam("productId") Integer productId,
                                       @RequestParam("count") Integer count){
         try {
             //Lat cart cua nguoi dung
@@ -58,7 +58,7 @@ public class ProductUserController {
     }
 
     @GetMapping ("/add-cart/{id}")
-    public ResponseEntity<Void> AddOneCartItem(@PathVariable("id") Integer productId){
+    public ResponseEntity<?> AddOneCartItem(@PathVariable("id") Integer productId){
 
         try {
             Cart cart = cartService.getCartForCurrentUser();

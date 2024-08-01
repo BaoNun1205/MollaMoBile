@@ -41,7 +41,7 @@
                                 <a th:href="@{/account}" th:text="${currentUser.fullName}"></a>
                             </li>
                             <li th:if="${!isAuthenticated}">
-                                <a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a>
+                                <a th:href="@{/login}">Sign in / Sign up</a>
                             </li>
                         </ul>
                     </li>
@@ -140,7 +140,7 @@
                                 </div><!-- End .product-cart-details -->
 
                                 <figure class="product-image-container">
-                                    <a href="product.html" class="product-image">
+                                    <a th:href="@{'/product/' + ${cartItem.product.id}}" class="product-image">
                                         <img th:if="${cartItem.product.images.size() > 0}"
                                              th:src="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
                                              th:data-zoom-image="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}" alt="product">

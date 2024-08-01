@@ -50,49 +50,24 @@ public class GlobalControllerAdvice {
 
             Cart cart = cartService.getCartForCurrentUser();
 
-            if (cart == null){
-                Cart newCart = new Cart();
-                newCart.setUser(user);
-                cartService.create(newCart);
+            List<CartItem> listCartItem = cart.getCartItems();
 
-                model.addAttribute("total", 0); //tong tien gio hang
-                model.addAttribute("cart", newCart);
-            } else {
-                List<CartItem> listCartItem = cart.getCartItems();
-
-                if (listCartItem != null){
-                    double total = 0.00;
-                    for (CartItem item : listCartItem) {
-                        total += item.getCount() * item.getProduct().getPrice();
-                    }
-
-                    model.addAttribute("total", total); //tong tien gio hang
-                    model.addAttribute("cart", cart);
+            double total = 0.00;
+            if (listCartItem != null) {
+                for (CartItem item : listCartItem) {
+                    total += item.getCount() * item.getProduct().getPrice();
                 }
             }
 
+            // làm tròn total
+            String formattedTotal = String.format("%.2f", total);
+
+            model.addAttribute("total", formattedTotal); //tong tien gio hang
+            model.addAttribute("cart", cart);
+
             WishList wishList = wishListService.getWishlistCurrentUser();
 
-            if (wishList == null){
-                WishList newWishlist = new WishList();
-                newWishlist.setUser(user);
-                wishListService.create(newWishlist);
-
-                model.addAttribute("wishlist", newWishlist);
-            } else {
-                model.addAttribute("wishlist", wishList);
-            }
-
-            //truyen dia chi giao hang
-            AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
-            if (addressShipping != null){
-                model.addAttribute("addressShipping", addressShipping);
-            } else {
-                AddressShipping newAddressShipping = new AddressShipping();
-                newAddressShipping.setUser(user);
-                model.addAttribute("addressShipping", newAddressShipping);
-            }
-
+            model.addAttribute("wishlist", wishList);
         }
     }
 }

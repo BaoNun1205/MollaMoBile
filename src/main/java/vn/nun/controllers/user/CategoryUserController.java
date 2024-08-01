@@ -95,20 +95,7 @@ public class CategoryUserController {
         Double maxPrice = (Double) requestBody.get("maxPrice");
         Integer categoryId = (Integer) requestBody.get("categoryId");
 
-//        log.info("Min Price: " + minPrice);
-//        log.info("Max Price: " + maxPrice);
-//        log.info("Category ID: " + categoryId);
-//
-//        if (filters == null) {
-//            filters = new ArrayList<>(); // Hoặc xử lý khác nếu filters là null
-//        }
-
         List<Product> products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(3));
-//        if (minPrice != null && maxPrice != null) {
-//            products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
-//        } else {
-//            products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
-//        }
 
         for (Product product : products) {
             for (Image image : product.getImages()){

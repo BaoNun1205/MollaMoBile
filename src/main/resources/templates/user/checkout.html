@@ -37,26 +37,27 @@
                     </div><!-- End .checkout-discount -->
                     <form th:action="@{/checkout/place-order}" method="post">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6" th:object="${addressShipping}">
                                 <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+<!--                                <input type="hidden" class="form-control" th:field=*{id} required>-->
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label>Recipient Name *</label>
-                                        <input type="text" class="form-control" th:value="${addressShipping.recipientName}" required>
+                                        <input type="text" class="form-control" th:field=*{recipientName} required>
                                     </div><!-- End .col-sm-6 -->
 
                                     <div class="col-sm-6">
                                         <label>Phone *</label>
-                                        <input type="tel" class="form-control" th:value="${addressShipping.phone}" required>
+                                        <input type="tel" class="form-control" th:field=*{phone} required>
                                     </div><!-- End .col-sm-6 -->
                                 </div><!-- End .row -->
 
                                 <label>Address *</label>
-                                <input type="text" class="form-control" placeholder="Address Detail" th:value="${addressShipping.address}" required>
+                                <input type="text" class="form-control" placeholder="Address Detail" th:field=*{address} required>
 
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
-                                    <label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
+                                    <input type="checkbox" name="isUpdateAddress" class="custom-control-input" id="checkout-diff-address">
+                                    <label class="custom-control-label" for="checkout-diff-address">Update address?</label>
                                 </div><!-- End .custom-checkbox -->
 
                                 <label>Order notes (optional)</label>

@@ -44,7 +44,7 @@
             <td class="product-col">
               <div class="product">
                 <figure class="product-media">
-                  <a href="#">
+                  <a th:href="@{'/product/' + ${wishlistItem.product.id}}">
                     <img th:if="${!wishlistItem.product.images.isEmpty()}"
                          th:src="@{/uploads/{image}(image=${wishlistItem.product.images.get(0).image})}"
                          th:data-zoom-image="@{/uploads/{image}(image=${wishlistItem.product.images.get(0).image})}"
@@ -53,7 +53,7 @@
                 </figure>
 
                 <h3 class="product-title">
-                  <a href="#" th:text="${wishlistItem.product.productName}"></a>
+                  <a th:href="@{'/product/' + ${wishlistItem.product.id}}" th:text="${wishlistItem.product.productName}"></a>
                 </h3><!-- End .product-title -->
               </div><!-- End .product -->
             </td>

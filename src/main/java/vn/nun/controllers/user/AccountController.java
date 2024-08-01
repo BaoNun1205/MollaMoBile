@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import vn.nun.models.AddressShipping;
 import vn.nun.models.OrderItem;
 import vn.nun.models.OrderPlaced;
+import vn.nun.services.AddressShippingService;
 import vn.nun.services.OrderPlacedService;
 import vn.nun.services.UserService;
 
@@ -19,9 +21,15 @@ public class AccountController {
     @Autowired
     private OrderPlacedService orderPlacedService;
     @Autowired
+    private AddressShippingService addressShippingService;
+    @Autowired
     private UserService userService;
     @GetMapping
     public String showAccount(Model model){
+
+        AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
+        model.addAttribute("addressShipping", addressShipping);
+
         String username = userService.currentUser().getUserName();
         List<OrderPlaced> listOrder = userService.findByUserName(username).getOrderPlaceds();
 

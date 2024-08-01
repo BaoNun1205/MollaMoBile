@@ -47,7 +47,7 @@
                     <td class="product-col">
                       <div class="product">
                         <figure class="product-media">
-                          <a href="#">
+                          <a th:href="@{'/product/' + ${cartItem.product.id}}">
                             <img th:if="${!cartItem.product.images.isEmpty()}"
                                  th:src="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
                                  th:data-zoom-image="@{/uploads/{image}(image=${cartItem.product.images.get(0).image})}"
@@ -55,7 +55,7 @@
                           </a>
                         </figure>
                         <h3 class="product-title">
-                          <a href="#" th:text="${cartItem.product.productName}"></a>
+                          <a th:href="@{'/product/' + ${cartItem.product.id}}" th:text="${cartItem.product.productName}"></a>
                         </h3><!-- End .product-title -->
                       </div><!-- End .product -->
                     </td>

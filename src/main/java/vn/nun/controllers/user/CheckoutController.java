@@ -15,6 +15,8 @@ public class CheckoutController {
     @Autowired
     private DeliveryService deliveryService;
     @Autowired
+    private AddressShippingService addressShippingService;
+    @Autowired
     private OrderPlacedService orderService;
     @Autowired
     private OrderItemService orderItemService;
@@ -27,28 +29,36 @@ public class CheckoutController {
         // Tìm đối tượng Delivery từ shippingMethodId
         Delivery selectedDelivery = deliveryService.findById(shippingMethodId);
 
+        //truyen dia chi giao hang
+        AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
+        model.addAttribute("addressShipping", addressShipping);
+
         double cartTotal = 0.00;
         for (CartItem cartItem : cart.getCartItems()){
             cartTotal += (cartItem.getCount() * cartItem.getProduct().getPrice());
         }
 
+        // làm tròn cartTotal
+        String formattedCartTotal = String.format("%.2f", cartTotal);
+
         Double cartTotalFinal = cartTotal + selectedDelivery.getPrice();
 
-        model.addAttribute("cartTotal", cartTotal);
-        model.addAttribute("cartTotalFinal", cartTotalFinal);
+        // làm tròn cartTotalFinal
+        String formattedCartTotalFinal = String.format("%.2f", cartTotalFinal);
 
-        // Đưa đối tượng Delivery vào model để truyền tới view
+        model.addAttribute("cartTotal", formattedCartTotal);
+        model.addAttribute("cartTotalFinal", formattedCartTotalFinal);
+
         model.addAttribute("selectedDelivery", selectedDelivery);
 
-        // Tiến hành xử lý thanh toán và chuyển hướng đến trang kết quả thanh toán
         return "user/checkout";
     }
 
     @GetMapping
     public String checkout(@ModelAttribute("cart") Cart cart, Model model){
-
-        OrderPlaced order = new OrderPlaced();
-        model.addAttribute("order", order);
+        //truyen dia chi giao hang
+        AddressShipping addressShipping = addressShippingService.getAddressShippingForCurrentUser();
+        model.addAttribute("addressShipping", addressShipping);
 
         Delivery freeship = deliveryService.findById(1);
 
@@ -57,15 +67,19 @@ public class CheckoutController {
             cartTotal += (cartItem.getCount() * cartItem.getProduct().getPrice());
         }
 
+        // làm tròn cartTotal
+        String formattedCartTotal = String.format("%.2f", cartTotal);
+
         Double cartTotalFinal = cartTotal + freeship.getPrice();
 
-        model.addAttribute("cartTotal", cartTotal);
-        model.addAttribute("cartTotalFinal", cartTotalFinal);
+        // làm tròn cartTotalFinal
+        String formattedCartTotalFinal = String.format("%.2f", cartTotalFinal);
 
-        // Đưa đối tượng Delivery vào model để truyền tới view
+        model.addAttribute("cartTotal", formattedCartTotal);
+        model.addAttribute("cartTotalFinal", formattedCartTotalFinal);
+
         model.addAttribute("selectedDelivery", freeship);
 
-        // Tiến hành xử lý thanh toán và chuyển hướng đến trang kết quả thanh toán
         return "user/checkout";
     }
 
@@ -74,7 +88,17 @@ public class CheckoutController {
                              @ModelAttribute("cart") Cart cart,
                              @ModelAttribute("currentUser") User user,
                              @RequestParam("deliveryId") Integer deliveryId,
+                             @RequestParam(name = "isUpdateAddress", defaultValue = "false") Boolean isUpdateAddress,
                              @RequestParam("notes") String notes){
+
+        if (isUpdateAddress){
+            AddressShipping addressShippingCurrent = addressShippingService.getAddressShippingForCurrentUser();
+            addressShippingCurrent.setRecipientName(addressShipping.getRecipientName());
+            addressShippingCurrent.setAddress(addressShipping.getAddress());
+            addressShippingCurrent.setPhone(addressShipping.getPhone());
+
+            addressShippingService.save(addressShippingCurrent);
+        }
 
         //Thong tin don dat hang
         OrderPlaced order = OrderPlaced.builder()
