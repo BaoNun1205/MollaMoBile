@@ -70,9 +70,17 @@ public class CategoryUserController {
         List<Product> products;
 
         if (minPrice != null && maxPrice != null) {
-            products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
+            if (categoryId == 0){
+                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, null);
+            } else {
+                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
+            }
         } else {
-            products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
+            if (categoryId == 0){
+                products = productService.filterByPriceAndCategory(filters, null); // Nếu không có minPrice và maxPrice
+            } else {
+                products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
+            }
         }
 
         for (Product product : products){
@@ -87,26 +95,4 @@ public class CategoryUserController {
         response.put("products", products);
         return ResponseEntity.ok(response);
     }
-
-    @PostMapping("/filter-products-by-price-slider")
-    public ResponseEntity<Map<String, Object>> filterProductsByPriceSlider(@RequestBody Map<String, Object> requestBody) {
-        List<String> filters = (List<String>) requestBody.get("filters");
-        Double minPrice = (Double) requestBody.get("minPrice");
-        Double maxPrice = (Double) requestBody.get("maxPrice");
-        Integer categoryId = (Integer) requestBody.get("categoryId");
-
-        List<Product> products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(3));
-
-        for (Product product : products) {
-            for (Image image : product.getImages()){
-                image.setProduct(null);
-            }
-            product.setCategory(null);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("products", products);
-        return ResponseEntity.ok(response);
-    }
-
 }

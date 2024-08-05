@@ -50,7 +50,7 @@ public class LoginController {
 					.fullName(name)
 					.email(email)
 					.userName(username)
-					.passWord(new BCryptPasswordEncoder().encode(password))
+					.passWord(password)
 					.enabled(true)
 					.build();
 

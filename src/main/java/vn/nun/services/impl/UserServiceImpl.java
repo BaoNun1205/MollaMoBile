@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vn.nun.models.CustomUserDetail;
@@ -33,6 +34,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) {
+		//ma hoa password
+		user.setPassWord(new BCryptPasswordEncoder().encode(user.getPassWord()));
 		return userRepository.save(user);
 	}
 

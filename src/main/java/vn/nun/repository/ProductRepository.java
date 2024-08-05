@@ -11,4 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
     List<Product> findByPriceBetweenAndCategory(Double minPrice, Double maxPrice, Category category);
     List<Product> findByPriceGreaterThanEqualAndCategory(Double minPrice, Category category);
     List<Product> findByPriceLessThanEqualAndCategory(Double maxPrice, Category category);
+    List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
+    List<Product> findByPriceGreaterThanEqual(Double minPrice);
+    List<Product> findByPriceLessThanEqual(Double maxPrice);
 }

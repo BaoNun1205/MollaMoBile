@@ -101,11 +101,23 @@ public class ProductServiceImpl implements ProductService {
 			}
 
 			if (minPrice != null && maxPrice != null) {
-				filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+				if (category == null){
+					filteredProducts.addAll(productRepository.findByPriceBetween(minPrice, maxPrice));
+				} else {
+					filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+				}
 			} else if (minPrice != null) {
-				filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndCategory(minPrice, category));
+				if (category == null){
+					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqual(minPrice));
+				} else {
+					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndCategory(minPrice, category));
+				}
 			} else if (maxPrice != null) {
-				filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndCategory(maxPrice, category));
+				if (category == null){
+					filteredProducts.addAll(productRepository.findByPriceLessThanEqual(maxPrice));
+				} else {
+					filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndCategory(maxPrice, category));
+				}
 			}
 		}
 		List<Product> sortedProducts = filteredProducts.stream()
@@ -118,7 +130,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> filterByPriceSliderAndCategory(Double minPrice, Double maxPrice, Category category) {
 		Set<Product> filteredProducts = new HashSet<>();
-		filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+		if (category == null){
+			filteredProducts.addAll(productRepository.findByPriceBetween(minPrice, maxPrice));
+		} else {
+			filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+		}
 		List<Product> sortedProducts = filteredProducts.stream()
 				.sorted(Comparator.comparingDouble(Product::getPrice))
 				.collect(Collectors.toList());
