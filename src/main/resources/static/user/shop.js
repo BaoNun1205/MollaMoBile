@@ -1,20 +1,36 @@
-function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
+function getSelectedCategoryIds() {
+    // Lấy tất cả các checkbox được chọn
+    const selectedCheckboxes = document.querySelectorAll('.filter-cate input[type="checkbox"]:checked');
+
+    // Chuyển id của các checkbox được chọn thành số và đưa vào mảng
+    const categoryIds = Array.from(selectedCheckboxes).map(checkbox => {
+        return parseInt(checkbox.id.replace('cat-', ''), 10);
+    });
+
+    return categoryIds;
+}
+
+// Sử dụng hàm để lấy danh sách các danh mục được chọn
+const selectedCategoryIds = getSelectedCategoryIds();
+console.log(selectedCategoryIds)
+
+function filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated) {
     let selectedFilters = null;
     if (minPrice == null && maxPrice == null){
         // Lấy tất cả các checkbox được chọn
-        selectedFilters = Array.from(document.querySelectorAll('.filter-item input[type="checkbox"]:checked')).map(checkbox => {
+        selectedFilters = Array.from(document.querySelectorAll('.filter-price-item input[type="checkbox"]:checked')).map(checkbox => {
             return checkbox.id;
         });
     }
 
     // Gửi yêu cầu AJAX với các bộ lọc đã chọn
-    fetch('/category/filter-products', {
+    fetch('/shop/filter-products', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ filters: selectedFilters, minPrice: minPrice, maxPrice: maxPrice, categoryId: categoryId })
+        body: JSON.stringify({ filters: selectedFilters, minPrice: minPrice, maxPrice: maxPrice, categoryIds: categoryIds })
     })
         .then(response => response.json())
         .then(data => {
@@ -104,7 +120,6 @@ function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
         .catch(error => console.error('Error:', error));
 }
 
-const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
 const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -118,8 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.sidebar-filter-clear').addEventListener('click', function(event) {
         event.preventDefault(); // Loại bỏ hành vi mặc định
 
-        // Bỏ chọn tất cả các checkbox
-        document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(checkbox => {
+        // Bỏ chọn tất cả các checkbox price
+        document.querySelectorAll('.filter-price-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Bỏ chọn tất cả các checkbox category
+        document.querySelectorAll('.filter-cate input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
 
@@ -130,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Gửi yêu cầu AJAX để lấy tất cả sản phẩm
-        filterProducts(null, null, categoryId, isAuthenticated);
+        filterProducts(null, null, null, isAuthenticated);
     });
 });
 
@@ -157,6 +177,8 @@ function initializePriceSlider(minPrice = 0, maxPrice = 2000) {
         })
     });
 
+    const categoryIds = getSelectedCategoryIds(); //lay ra cac checkbox category duoc check
+
     // Cập nhật thanh slider và gọi filterProducts khi slider thay đổi
     priceSlider.noUiSlider.on('update', function(values, handle) {
         if (isCheckboxChanging) return; // Nếu đang thay đổi checkbox, không xử lý slider
@@ -166,55 +188,84 @@ function initializePriceSlider(minPrice = 0, maxPrice = 2000) {
         $('#filter-price-range').text(values.join(' - '));
 
         // Gửi yêu cầu AJAX với giá trị của thanh slider và không có các bộ lọc checkbox
-        const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
         const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
-        filterProducts(currentMinPrice, currentMaxPrice, categoryId, isAuthenticated);
+        filterProducts(currentMinPrice, currentMaxPrice, categoryIds, isAuthenticated);
 
         // Bỏ chọn tất cả các checkbox khi slider thay đổi
-        document.querySelectorAll('.filter-item input[type="checkbox"]:checked').forEach(checkbox => {
+        document.querySelectorAll('.filter-price-item input[type="checkbox"]:checked').forEach(checkbox => {
             checkbox.checked = false;
         });
     });
 }
 
-//them su kien cho cac checkbox danh muc
-
-
 //them su kien cho cac checkbox gia
 function setupCheckboxListeners() {
-    document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(checkbox => {
+    // Sự kiện cho các checkbox danh mục
+    document.querySelectorAll('.filter-cate input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            isCheckboxChanging = true; // Đánh dấu đang thay đổi checkbox
-
-            const checkedCheckboxes = document.querySelectorAll('.filter-item input[type="checkbox"]:checked');
-            const isAnyCheckboxChecked = checkedCheckboxes.length > 0;
-
-            if (isAnyCheckboxChecked) {
-                // Đặt lại thanh slider về giá trị mặc định
-                var priceSlider = document.getElementById('price-slider');
-                if (priceSlider && priceSlider.noUiSlider) {
-                    priceSlider.noUiSlider.set([0, 2000]);
-                }
-
-                // Gửi yêu cầu AJAX với giá trị mặc định của slider và các bộ lọc checkbox hiện tại
-                filterProducts(null, null, categoryId, isAuthenticated);
-            } else {
-                // Nếu không có checkbox nào được chọn, chỉ lọc theo slider
-                var priceSlider = document.getElementById('price-slider');
-                if (priceSlider && priceSlider.noUiSlider) {
-                    var values = priceSlider.noUiSlider.get();
-                    var minPrice = parseFloat(values[0].replace('$', ''));
-                    var maxPrice = parseFloat(values[1].replace('$', ''));
-
-                    filterProducts(minPrice, maxPrice, categoryId, isAuthenticated);
-                }
-            }
-
-            console.log(isAuthenticated)
-
-            isCheckboxChanging = false; // Đánh dấu đã xong việc thay đổi checkbox
+            handleCheckboxChange();
         });
     });
+
+    // Sự kiện cho các checkbox giá
+    document.querySelectorAll('.filter-price-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            handleCheckboxChange();
+        });
+    });
+}
+
+function handleCheckboxChange() {
+    isCheckboxChanging = true; // Đánh dấu đang thay đổi checkbox
+
+    const categoryIds = getSelectedCategoryIds(); // Lấy ra các checkbox category được check
+    console.log(categoryIds)
+    const checkedPriceCheckboxes = document.querySelectorAll('.filter-price-item input[type="checkbox"]:checked'); // Lấy ra các checkbox giá được check
+    console.log(checkedPriceCheckboxes)
+    const isAnyPriceCheckboxChecked = checkedPriceCheckboxes.length > 0;
+    const isAnyCategoryCheckboxChecked = categoryIds.length > 0;
+
+    var priceSlider = document.getElementById('price-slider');
+    if (priceSlider && priceSlider.noUiSlider) {
+        var values = priceSlider.noUiSlider.get();
+        var minPrice = parseFloat(values[0].replace('$', ''));
+        var maxPrice = parseFloat(values[1].replace('$', ''));
+    }
+
+    // Nếu có checkbox giá và không có checkbox danh mục
+    if (isAnyPriceCheckboxChecked && !isAnyCategoryCheckboxChecked) {
+        // Đặt lại thanh slider về giá trị mặc định
+        if (priceSlider && priceSlider.noUiSlider) {
+            priceSlider.noUiSlider.set([0, 2000]);
+        }
+
+        // Gửi yêu cầu AJAX với giá trị mặc định của slider và các bộ lọc checkbox giá hiện tại
+        filterProducts(null, null, null, isAuthenticated); // min, max của slider là null, categoryIds là null
+    }
+    // Nếu không có checkbox giá và có checkbox danh mục
+    else if (!isAnyPriceCheckboxChecked && isAnyCategoryCheckboxChecked) {
+        // Gửi yêu cầu AJAX với giá trị mặc định của slider và các bộ lọc checkbox giá hiện tại
+        filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated); // min, max của slider là null, categoryIds là null
+    }
+    // Nếu cả hai đều có
+    else if (isAnyPriceCheckboxChecked && isAnyCategoryCheckboxChecked) {
+        // Đặt lại thanh slider về giá trị mặc định
+        if (priceSlider && priceSlider.noUiSlider) {
+            priceSlider.noUiSlider.set([0, 2000]);
+        }
+
+        // Gửi yêu cầu AJAX với giá trị mặc định của slider và các bộ lọc checkbox category hiện tại
+        filterProducts(null, null, categoryIds, isAuthenticated); // min, max của slider là null
+    }
+    // Nếu cả hai đều không có
+    else {
+        // Lọc theo slider
+        if (priceSlider && priceSlider.noUiSlider) {
+            filterProducts(minPrice, maxPrice, null, isAuthenticated);
+        }
+    }
+
+    isCheckboxChanging = false; // Đánh dấu đã xong việc thay đổi checkbox
 }
 
 

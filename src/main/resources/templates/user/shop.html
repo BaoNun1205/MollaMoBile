@@ -508,7 +508,7 @@
                                 <div class="collapse show" id="widget-1">
                                     <div class="widget-body">
                                         <div class="filter-items filter-items-count">
-                                            <div class="filter-item" th:each="category : ${listCate}">
+                                            <div class="filter-item filter-cate" th:each="category : ${listCate}">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" th:id="'cat-' + ${category.id}">
                                                     <label class="custom-control-label" th:for="'cat-' + ${category.id}" th:text="${category.categoryName}"></label>
@@ -531,42 +531,42 @@
                                     <div class="widget-body">
                                         <div class="filter-items">
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-1">
                                                     <label class="custom-control-label" for="price-1">Under $200</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-2">
                                                     <label class="custom-control-label" for="price-2">$200 - 400</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-3">
                                                     <label class="custom-control-label" for="price-3">$400 - 600</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-4">
                                                     <label class="custom-control-label" for="price-4">$600 - 800</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-5">
                                                     <label class="custom-control-label" for="price-5">$800 - 1200</label>
                                                 </div><!-- End .custom-checkbox -->
                                             </div><!-- End .filter-item -->
 
-                                            <div class="filter-item">
+                                            <div class="filter-item filter-price-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="price-6">
                                                     <label class="custom-control-label" for="price-6">Above $1200</label>

@@ -1,8 +1,8 @@
 function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
-    let selectedFilters = null;
+    let selectedPriceFilters = null;
     if (minPrice == null && maxPrice == null){
         // Lấy tất cả các checkbox được chọn
-        selectedFilters = Array.from(document.querySelectorAll('.filter-item input[type="checkbox"]:checked')).map(checkbox => {
+        selectedPriceFilters = Array.from(document.querySelectorAll('.filter-item input[type="checkbox"]:checked')).map(checkbox => {
             return checkbox.id;
         });
     }
@@ -14,7 +14,7 @@ function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ filters: selectedFilters, minPrice: minPrice, maxPrice: maxPrice, categoryId: categoryId })
+        body: JSON.stringify({ filters: selectedPriceFilters, minPrice: minPrice, maxPrice: maxPrice, categoryId: categoryId })
     })
         .then(response => response.json())
         .then(data => {
