@@ -10,10 +10,6 @@ function getSelectedCategoryIds() {
     return categoryIds;
 }
 
-// Sử dụng hàm để lấy danh sách các danh mục được chọn
-const selectedCategoryIds = getSelectedCategoryIds();
-console.log(selectedCategoryIds)
-
 function filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated) {
     let selectedFilters = null;
     if (minPrice == null && maxPrice == null){
@@ -150,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Gửi yêu cầu AJAX để lấy tất cả sản phẩm
-        filterProducts(null, null, null, isAuthenticated);
+        filterProducts(0, 2000, null, isAuthenticated);
     });
 });
 

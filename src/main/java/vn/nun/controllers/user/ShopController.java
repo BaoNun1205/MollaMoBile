@@ -27,7 +27,6 @@ public class ShopController {
     @GetMapping
     public String viewShop(Model model){
         List<Product> listProduct = productService.getAll();
-//        model.addAttribute("category", new Category());
         model.addAttribute("listProduct", listProduct);
         return "user/shop";
     }
