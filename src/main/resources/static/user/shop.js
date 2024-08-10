@@ -13,11 +13,14 @@ function getSelectedCategoryIds() {
 function filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated) {
     let selectedFilters = null;
     if (minPrice == null && maxPrice == null){
-        // Lấy tất cả các checkbox được chọn
+        // Lấy tất cả các checkbox gia được chọn
         selectedFilters = Array.from(document.querySelectorAll('.filter-price-item input[type="checkbox"]:checked')).map(checkbox => {
             return checkbox.id;
         });
     }
+
+    // Lấy giá trị tìm kiếm từ ô input
+    const keyword = document.querySelector('input[name="q"]').value;
 
     // Gửi yêu cầu AJAX với các bộ lọc đã chọn
     fetch('/shop/filter-products', {
@@ -26,7 +29,7 @@ function filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ filters: selectedFilters, minPrice: minPrice, maxPrice: maxPrice, categoryIds: categoryIds })
+        body: JSON.stringify({ filters: selectedFilters, minPrice: minPrice, maxPrice: maxPrice, categoryIds: categoryIds, keyword: keyword })
     })
         .then(response => response.json())
         .then(data => {
@@ -116,6 +119,7 @@ function filterProducts(minPrice, maxPrice, categoryIds, isAuthenticated) {
         .catch(error => console.error('Error:', error));
 }
 
+const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
 const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
 
 document.addEventListener('DOMContentLoaded', function() {

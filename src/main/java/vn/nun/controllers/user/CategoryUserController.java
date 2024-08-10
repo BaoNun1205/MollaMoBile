@@ -71,15 +71,15 @@ public class CategoryUserController {
 
         if (minPrice != null && maxPrice != null) {
             if (categoryId == 0){
-                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, null);
+                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, null, "");
             } else {
-                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId));
+                products = productService.filterByPriceSliderAndCategory(minPrice, maxPrice, categoryService.findById(categoryId), "");
             }
         } else {
             if (categoryId == 0){
-                products = productService.filterByPriceAndCategory(filters, null); // Nếu không có minPrice và maxPrice
+                products = productService.filterByPriceAndCategory(filters, null, ""); // Nếu không có minPrice và maxPrice
             } else {
-                products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId)); // Nếu không có minPrice và maxPrice
+                products = productService.filterByPriceAndCategory(filters, categoryService.findById(categoryId), ""); // Nếu không có minPrice và maxPrice
             }
         }
 

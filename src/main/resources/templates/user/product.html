@@ -72,7 +72,7 @@
                                     <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                 </div><!-- End .rating-container -->
 
-                                <div class="product-price" th:text="${product.price}">
+                                <div class="product-price" th:text="'$'+${product.price}">
                                 </div><!-- End .product-price -->
 
                                 <div class="product-content">
@@ -115,11 +115,12 @@
                                         <button th:if="${isAuthenticated}" type="submit" class="btn-product btn-cart"><span>add to cart</span></button>
 
                                         <!-- Nút mở modal đăng nhập cho người dùng chưa đăng nhập -->
-                                        <a th:if="${!isAuthenticated}" href="#signin-modal" data-toggle="modal" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <a th:if="${!isAuthenticated}" href="/login" class="btn-product btn-cart"><span>add to cart</span></a>
                                     </form><!-- End .details-action-col -->
 
                                     <div class="details-action-wrapper">
-                                        <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        <a th:if="${isAuthenticated}" href="javascript:void(0);" th:onclick="'addToWishlist(' + ${product.id} + '); return false;'" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        <a th:if="${!isAuthenticated}" href="/login" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                         <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a>
                                     </div><!-- End .details-action-wrapper -->
                                 </div><!-- End .product-details-action -->
@@ -127,9 +128,7 @@
                                 <div class="product-details-footer">
                                     <div class="product-cat">
                                         <span>Category:</span>
-                                        <a href="#">Women</a>,
-                                        <a href="#">Dresses</a>,
-                                        <a href="#">Yellow</a>
+                                        <a th:href="'/category/' + ${product.getCategory().id}" th:text="${product.getCategory().categoryName}"></a>
                                     </div><!-- End .product-cat -->
 
                                     <div class="social-icons social-icons-sm">

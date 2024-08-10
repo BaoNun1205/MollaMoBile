@@ -69,3 +69,7 @@ function addToWishlist(id) {
         })
         .catch(error => console.error('Error:', error));
 }
+
+function search(){
+
+}

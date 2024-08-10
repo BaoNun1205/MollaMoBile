@@ -35,7 +35,7 @@
                             <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
                         </form>
                     </div><!-- End .checkout-discount -->
-                    <form th:action="@{/checkout/place-order}" method="post">
+                    <form id="place-order" th:action="@{/checkout/place-order}" method="post">
                         <div class="row">
                             <div class="col-lg-6" th:object="${addressShipping}">
                                 <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
@@ -504,7 +504,63 @@
     </div><!-- End .modal-dialog -->
 </div><!-- End .modal -->
 
+<!--&lt;!&ndash; Error Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-body">-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true"><i class="icon-close"></i></span>-->
+<!--                </button>-->
+
+<!--                <div class="form-box">-->
+<!--                    <div class="form-tab">-->
+<!--                        <ul class="nav nav-pills nav-fill" role="tablist">-->
+<!--                            <li class="nav-item">-->
+<!--                                <a class="nav-link active" id="error-tab" data-toggle="tab" href="#error" role="tab" aria-controls="error" aria-selected="true">Error</a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                        <div class="tab-content" id="tab-content-error">-->
+<!--                            <div class="tab-pane fade show active" id="error" role="tabpanel" aria-labelledby="error-tab">-->
+<!--                                <div class="alert alert-danger" role="alert" id="error-message">-->
+<!--                                    &lt;!&ndash; Thông báo lỗi sẽ được thêm vào đây &ndash;&gt;-->
+<!--                                </div>-->
+<!--                                <div class="form-footer">-->
+<!--                                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">-->
+<!--                                        <span>Close</span>-->
+<!--                                    </button>-->
+<!--                                </div>&lt;!&ndash; End .form-footer &ndash;&gt;-->
+<!--                            </div>&lt;!&ndash; .End .tab-pane &ndash;&gt;-->
+<!--                        </div>&lt;!&ndash; End .tab-content &ndash;&gt;-->
+<!--                    </div>&lt;!&ndash; End .form-tab &ndash;&gt;-->
+<!--                </div>&lt;!&ndash; End .form-box &ndash;&gt;-->
+<!--            </div>&lt;!&ndash; End .modal-body &ndash;&gt;-->
+<!--        </div>&lt;!&ndash; End .modal-content &ndash;&gt;-->
+<!--    </div>&lt;!&ndash; End .modal-dialog &ndash;&gt;-->
+<!--</div>&lt;!&ndash; End .modal &ndash;&gt;-->
+
+<!-- Modal -->
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert" role="alert" id="error-message">-->
+                 <!-- Thông báo lỗi sẽ được thêm vào đây -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="user/fragments/script :: script"></div>
+<script th:src="@{/user/checkout.js}"></script>
 </body>
 
 

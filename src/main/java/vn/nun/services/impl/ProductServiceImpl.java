@@ -59,7 +59,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> filterByPriceAndCategory(List<String> filters, Category category) {
+	public List<Product> findByKeyword(String keyword) {
+		return productRepository.searchProducts(keyword);
+	}
+
+	@Override
+	public List<Product> filterByPriceAndCategory(List<String> filters, Category category, String keyword) {
 		if (filters == null || filters.isEmpty()) {
 			// Nếu không có bộ lọc, trả về tất cả các sản phẩm
 			return category.getProducts();
@@ -102,21 +107,21 @@ public class ProductServiceImpl implements ProductService {
 
 			if (minPrice != null && maxPrice != null) {
 				if (category == null){
-					filteredProducts.addAll(productRepository.findByPriceBetween(minPrice, maxPrice));
+					filteredProducts.addAll(productRepository.findByPriceBetweenAndProductNameContainingIgnoreCase(minPrice, maxPrice, keyword));
 				} else {
-					filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+					filteredProducts.addAll(productRepository.findByPriceBetweenAndCategoryAndProductNameContainingIgnoreCase(minPrice, maxPrice, category, keyword));
 				}
 			} else if (minPrice != null) {
 				if (category == null){
-					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqual(minPrice));
+					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndProductNameContainingIgnoreCase(minPrice, keyword));
 				} else {
-					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndCategory(minPrice, category));
+					filteredProducts.addAll(productRepository.findByPriceGreaterThanEqualAndCategoryAndProductNameContainingIgnoreCase(minPrice, category, keyword));
 				}
 			} else if (maxPrice != null) {
 				if (category == null){
-					filteredProducts.addAll(productRepository.findByPriceLessThanEqual(maxPrice));
+					filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndProductNameContainingIgnoreCase(maxPrice, keyword));
 				} else {
-					filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndCategory(maxPrice, category));
+					filteredProducts.addAll(productRepository.findByPriceLessThanEqualAndCategoryAndProductNameContainingIgnoreCase(maxPrice, category, keyword));
 				}
 			}
 		}
@@ -128,12 +133,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<Product> filterByPriceSliderAndCategory(Double minPrice, Double maxPrice, Category category) {
+	public List<Product> filterByPriceSliderAndCategory(Double minPrice, Double maxPrice, Category category, String keyword) {
 		Set<Product> filteredProducts = new HashSet<>();
 		if (category == null){
-			filteredProducts.addAll(productRepository.findByPriceBetween(minPrice, maxPrice));
+			filteredProducts.addAll(productRepository.findByPriceBetweenAndProductNameContainingIgnoreCase(minPrice, maxPrice, keyword));
 		} else {
-			filteredProducts.addAll(productRepository.findByPriceBetweenAndCategory(minPrice, maxPrice, category));
+			filteredProducts.addAll(productRepository.findByPriceBetweenAndCategoryAndProductNameContainingIgnoreCase(minPrice, maxPrice, category, keyword));
 		}
 		List<Product> sortedProducts = filteredProducts.stream()
 				.sorted(Comparator.comparingDouble(Product::getPrice))
