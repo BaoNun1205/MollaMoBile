@@ -1,4 +1,7 @@
-function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
+const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
+const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
+
+function filterProducts(minPrice, maxPrice, categoryId = 0, pageNo = 1) {
     let selectedPriceFilters = null;
     if (minPrice == null && maxPrice == null){
         // Lấy tất cả các checkbox được chọn
@@ -14,14 +17,20 @@ function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ filters: selectedPriceFilters, minPrice: minPrice, maxPrice: maxPrice, categoryId: categoryId })
+        body: JSON.stringify({ filters: selectedPriceFilters, minPrice: minPrice, maxPrice: maxPrice, categoryId: categoryId, pageNo: pageNo })
     })
         .then(response => response.json())
         .then(data => {
             // Cập nhật số lượng sản phẩm
             const productQuantity = document.querySelector('.product-quantity');
+            const productQuantityPageCurrent = document.querySelector('.product-quantity-page-current');
+
             if (productQuantity) {
                 productQuantity.textContent = data.totalCount; // Giả sử `data.totalCount` là số lượng sản phẩm
+            }
+
+            if (productQuantityPageCurrent){
+                productQuantityPageCurrent.textContent = data.products.length;
             }
 
             // Cập nhật danh sách sản phẩm
@@ -100,12 +109,41 @@ function filterProducts(minPrice, maxPrice, categoryId = 0, isAuthenticated) {
                 `;
                 productListEmpty.insertAdjacentHTML('beforeend', productHtml);
             }
+
+            // Cập nhật phân trang
+            updatePagination(data.currentPage, data.totalPages, minPrice, maxPrice, categoryId);
         })
         .catch(error => console.error('Error:', error));
 }
 
-const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
-const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
+// Cập nhật phân trang
+function updatePagination(currentPage, totalPages, minPrice, maxPrice, categoryId) {
+    const paginationElement = document.querySelector('.pagination');
+
+    if (!paginationElement) return;
+
+    paginationElement.innerHTML = `
+        ${totalPages > 0 ? `
+            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link page-link-prev" href="#" ${currentPage > 1 ? `onclick="filterProducts(${minPrice}, ${maxPrice}, ${categoryId}, ${currentPage - 1}); return false;"` : 'aria-disabled="true"'} aria-label="Previous">
+                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                </a>
+            </li>
+        ` : ''}
+        ${Array.from({ length: totalPages }, (_, i) => i + 1).map(i => `
+            <li class="page-item ${currentPage == i ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="filterProducts(${minPrice}, ${maxPrice}, ${categoryId}, ${i}); return false;">${i}</a>
+            </li>
+        `).join('')}
+        ${totalPages > 0 ? `
+            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link page-link-prev" href="#" ${currentPage < totalPages ? `onclick="filterProducts(${minPrice}, ${maxPrice}, ${categoryId}, ${currentPage + 1}); return false;"` : 'aria-disabled="true"'} aria-label="Next">
+                    <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>Next
+                </a>
+            </li>
+        ` : ''}
+    `;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Khởi tạo thanh slider với giá trị mặc định
@@ -130,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Gửi yêu cầu AJAX để lấy tất cả sản phẩm
-        filterProducts(null, null, categoryId, isAuthenticated);
+        filterProducts(null, null, categoryId);
     });
 });
 
@@ -166,9 +204,7 @@ function initializePriceSlider(minPrice = 0, maxPrice = 2000) {
         $('#filter-price-range').text(values.join(' - '));
 
         // Gửi yêu cầu AJAX với giá trị của thanh slider và không có các bộ lọc checkbox
-        const categoryId = parseInt(document.getElementById('widget-5').getAttribute('data-category-id'), 10);
-        const isAuthenticated = (document.getElementById('widget-5').getAttribute('data-isAuthenticated') === 'true');
-        filterProducts(currentMinPrice, currentMaxPrice, categoryId, isAuthenticated);
+        filterProducts(currentMinPrice, currentMaxPrice, categoryId);
 
         // Bỏ chọn tất cả các checkbox khi slider thay đổi
         document.querySelectorAll('.filter-item input[type="checkbox"]:checked').forEach(checkbox => {
@@ -197,7 +233,7 @@ function setupCheckboxListeners() {
                 }
 
                 // Gửi yêu cầu AJAX với giá trị mặc định của slider và các bộ lọc checkbox hiện tại
-                filterProducts(null, null, categoryId, isAuthenticated);
+                filterProducts(null, null, categoryId);
             } else {
                 // Nếu không có checkbox nào được chọn, chỉ lọc theo slider
                 var priceSlider = document.getElementById('price-slider');
@@ -206,11 +242,9 @@ function setupCheckboxListeners() {
                     var minPrice = parseFloat(values[0].replace('$', ''));
                     var maxPrice = parseFloat(values[1].replace('$', ''));
 
-                    filterProducts(minPrice, maxPrice, categoryId, isAuthenticated);
+                    filterProducts(minPrice, maxPrice, categoryId);
                 }
             }
-
-            console.log(isAuthenticated)
 
             isCheckboxChanging = false; // Đánh dấu đã xong việc thay đổi checkbox
         });
